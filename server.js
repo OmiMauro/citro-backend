@@ -7,22 +7,20 @@ import cors from 'cors'
 import expressValidator from 'express-validator'
 import dotenv from 'dotenv/config'
 // Routes of application
-import inscriptionRouter from './inscription/inscriptionRouter.js'
 
 // import routes
-import authRoutes from './routes/auth.js'
-import userRoutes from './routes/user.js'
-import orderRoutes from './routes/order'
-
+import authRoutes from './routes/authRoute.js'
+import userRoutes from './routes/userRoute.js'
+import inscriptionRoutes from './routes/inscriptionRoute.js'
 const App = express()
 
 App.use(express.static('build'))
 // db
-mongoose.connect(process.env.DATABASE, {
+/* mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
-}).then(() => console.log('DB Connected'))
+}).then(() => console.log('DB Connected')) */
 
 // middleware
 App.use(morgan('dev'))
@@ -34,8 +32,6 @@ App.use(cors())
 // routes middleware
 App.use('/api', authRoutes)
 App.use('/api', userRoutes)
-
-App.use('/api', orderRoutes)
 
 const port = process.env.PORT || 8000
 

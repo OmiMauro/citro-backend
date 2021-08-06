@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
-const crypto = require('crypto')
-const { v1: uuidv1 } = require('uuid')
-
+import mongoose from 'mongoose'
+import crypto from 'crypto'
+import { v1 } from 'uuid'
+const uuidv1 = v1
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
