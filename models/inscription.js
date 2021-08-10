@@ -8,7 +8,6 @@ const inscriptionSchema = new Schema({
     required: [true, 'El nombre es obligatorio'],
     trim: true,
     uppercasse: true
-
   },
   lastname: {
     type: String,
@@ -17,7 +16,7 @@ const inscriptionSchema = new Schema({
     uppercasse: true
   },
   DNI: {
-    type: String,
+    type: Number,
     required: [true, 'El DNI es obligatorio'],
     trim: true,
     unique: true
@@ -43,9 +42,7 @@ const inscriptionSchema = new Schema({
     default: 'Otro',
     trim: true,
     required: [true, 'La localidad de origen es obligatorio']
-
   }
-
 }, {
   timestamps: true
 })

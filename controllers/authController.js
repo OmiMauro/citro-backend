@@ -4,7 +4,6 @@ import expressJwt from 'express-jwt'
 import { errorHandler } from '../helpers/dbErrorHandlers.js'
 
 const signup = async (req, res) => {
-  console.log(req.body)
   try {
     const user = new User(req.body)
     const userSaved = await user.save()
@@ -20,7 +19,7 @@ const signup = async (req, res) => {
 const signin = async (req, res) => {
   try {
     const { email, password } = req.body
-    const user = await User.findOne(email)
+    const user = await User.findOne({ email })
     if (user.authenticate(password)) {
       // Generar el token firmado con el id y el secret
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
@@ -29,10 +28,10 @@ const signin = async (req, res) => {
       const { _id, name, email, role } = user
       return res.json({ token, user: { _id, email, name, role } })
     } else {
-      return res.status(401).json({ error: 'Email o contraseña incorrectas.' })
+      res.status(401).json({ error: 'Email o contraseña incorrectas. ' })
     }
   } catch (error) {
-    return res.status(400).json({ error: 'El email ingresado no existe.' })
+    return res.status(400).json({ error: 'El usuario con el email ingresado no existe. Por favor, contactese con el administrador!' })
   }
 }
 const signout = (req, res) => {
@@ -45,8 +44,9 @@ const requireSignin = expressJwt({
   userProperty: 'cookieauth'
 })
 
-const isAuth = async (req, res, next) => {
-  const user = req.profile && req.auth && req.profile._id === req.auth._id
+const isAuth = (req, res, next) => {
+  console.log(req.profile, req.auth)
+  const user = req.profile && req.auth && req.profile._id == req.auth._id
   if (!user) {
     return res.status(403).json({ error: 'Acceso denegado' })
   }
