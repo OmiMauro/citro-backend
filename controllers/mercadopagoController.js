@@ -1,7 +1,9 @@
 import mercadopago from 'mercadopago'
 import Inscription from '../models/inscription.js'
 import OrderMP from '../models/ordersMercadoPago.js'
-
+import axios from 'axios'
+const title = process.env.title
+const unit_price = parseInt(process.env.price)
 mercadopago.configure({
   access_token: `${process.env.ACCESS_TOKEN_MP}`
 })
@@ -15,16 +17,18 @@ const createPreference = async (req, res) => {
       const savedIncription = await inscription.save()
     }
     findInscription = await Inscription.findOne({ DNI }).select({ _id: 1 })
-
+    console.log(findInscription)
     const createOrder = await OrderMP.create({
       inscriptionId: findInscription._id,
-      title: process.env.title,
-      unit_price: process.env.price,
-      DNI: findInscription.DNI
+      title,
+      unit_price
+
     })
+
     const orderSaved = await createOrder.save()
+    console.log(orderSaved)
     const preference = await mercadopago.preferences.create({
-      external_reference: orderSaved._id,
+      external_reference: orderSaved._id.toString(),
       statement_descriptor: 'CitroRodando',
       notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/ipn`,
       back_urls: {
@@ -33,17 +37,18 @@ const createPreference = async (req, res) => {
         pending: `${process.env.NAME_APPLICATION}/rejected`
       },
       items: [{
-        title: process.env.title,
-        unit_price: process.env.price,
+        title,
+        unit_price,
         quantity: 1,
         currency_id: 'ARS',
         description: 'Inscripción para el evento a realizarse en Jardín América, Misiones, los días 20 y 21 de noviembre.'
       }],
       installments: 12
     })
-    res.status(200).json({ init_point: preference.body.init_point })
+    console.log(preference)
+    res.status(200).json({ init_point: preference.body.init_point, preference })
   } catch (err) {
-    res.status(500).json({ error: true, msg: err })
+    res.status(500).json({ error: true, msg: err.message })
   }
 }
 
