@@ -42,11 +42,15 @@ const inscriptionSchema = new Schema({
     default: 'Otro',
     trim: true,
     required: [true, 'La localidad de origen es obligatorio']
-  }
+  },
+  orders: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Order'
+  }]
 }, {
   timestamps: true
 })
 
 inscriptionSchema.plugin(uniqueValidator)
-const Inscription = mongoose.model('Inscriptions', inscriptionSchema)
+const Inscription = mongoose.model('Inscription', inscriptionSchema)
 export default Inscription

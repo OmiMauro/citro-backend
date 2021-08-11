@@ -3,12 +3,9 @@ import Inscription from './inscription.js'
 const Schema = mongoose.Schema
 
 const orderSchema = new Schema({
-  inscriptionId: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: Inscription
-  },
-  DNI: {
-    type: Number
+  inscription: {
+    type: Schema.Types.ObjectId,
+    ref: 'Inscription'
   },
   title: {
     type: String,
@@ -19,10 +16,27 @@ const orderSchema = new Schema({
     type: Number
   },
   status: {
-    type: String,
-    default: 'pending'
+    type: String
+  },
+  status_detail: {
+    type: String
+  },
+  id_Operacion: {
+    type: String
+  },
+  date_created: {
+    type: Date
+  },
+  date_updated: {
+    type: Date
+  },
+  date_approved: {
+    type: Date
+  },
+  net_received_amount: {
+    type: Number
   }
 })
 
-const modelOrder = mongoose.model('OrderMercadoPago', orderSchema)
+const modelOrder = mongoose.model('Order', orderSchema)
 export default modelOrder

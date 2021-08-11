@@ -1,45 +1,46 @@
 import mercadopago from 'mercadopago'
 import Inscription from '../models/inscription.js'
 import OrderMP from '../models/ordersMercadoPago.js'
-const title = 'Inscripción CitroRodando'
-const unit_price = 100
+
 mercadopago.configure({
   access_token: `${process.env.ACCESS_TOKEN_MP}`
 })
 
 const createPreference = async (req, res) => {
-  console.log(req.body)
   try {
-    /*  const { name, lastname, DNI, email, numberCell, provinceOrigin, locationOrigin } = req.body
-
+    const { name, lastname, DNI, email, numberCell, provinceOrigin, locationOrigin } = req.body
     let findInscription = await Inscription.findOne({ DNI })
     if (!findInscription) {
       const inscription = await Inscription.create({ name, lastname, DNI, email, numberCell, provinceOrigin, locationOrigin })
       const savedIncription = await inscription.save()
-      console.log(savedIncription)
     }
-    findInscription = await Inscription.findOne({ DNI }).select({ _id: 1, DNI: 1 })
+    findInscription = await Inscription.findOne({ DNI }).select({ _id: 1 })
 
     const createOrder = await OrderMP.create({
-      inscriptionId: findInscription._id, title, unit_price, DNI: findInscription.DNI
+      inscriptionId: findInscription._id,
+      title: process.env.title,
+      unit_price: process.env.price,
+      DNI: findInscription.DNI
     })
-    const orderSaved = await createOrder.save() */
+    const orderSaved = await createOrder.save()
     const preference = await mercadopago.preferences.create({
-      /* external_reference: toString(orderSaved.DNI), */
-      statement_descriptor: 'Encuentro de Autos CitroRodando',
-      notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook`,
+      external_reference: orderSaved._id,
+      statement_descriptor: 'CitroRodando',
+      notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/ipn`,
       back_urls: {
         success: `${process.env.NAME_APPLICATION}/success`,
         failure: `${process.env.NAME_APPLICATION}/pending`,
         pending: `${process.env.NAME_APPLICATION}/rejected`
       },
       items: [{
-        title,
-        unit_price,
-        quantity: 1
-      }]
+        title: process.env.title,
+        unit_price: process.env.price,
+        quantity: 1,
+        currency_id: 'ARS',
+        description: 'Inscripción para el evento a realizarse en Jardín América, Misiones, los días 20 y 21 de noviembre.'
+      }],
+      installments: 12
     })
-    console.log(preference)
     res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
     res.status(500).json({ error: true, msg: err })
@@ -53,24 +54,25 @@ const feedback = (req, res) => {
     MerchantOrder: req.query.merchant_order_id
   })
 }
-const webhook = async (req, res) => {
+const ipn = async (req, res) => {
   try {
-    if (req.method === 'POST') {
-      let body = ''
-      req.on('data', chunck => {
-        body += chunck.toString()
+    console.log(req.body)
+    if (req.params.type === 'payment') {
+      const findPay = await axios({
+        method: 'GET',
+        URL: `https://api.mercadopago.com/v1/payments/${req.params.data.id}?${process.env.ACCESS_TOKEN_MP}`
       })
-      req.on('end', () => {
-        console.log('response web hook', body)
-        res.end('ok')
-      })
+      console.log(findPay)
+      const { id, date_created, date_updated, status, status_detail, external_reference } = findPay
+      const { net_received_amount } = findPay.net_received_amount
     }
+
     return res.status(200)
   } catch (e) {
     console.log(e)
   }
 }
-export { createPreference, feedback, webhook }
+export { createPreference, feedback, ipn }
 
 /*
 if (req.params.type === 'payment') {
@@ -91,3 +93,17 @@ if (req.params.type === 'payment') {
         }
       }
     } */
+
+/*
+    https://citrorodando.herokuapp.com/success?
+    collection_id=1239676416&
+    collection_status=approved&
+    payment_id=1239676416&
+    status=approved&
+    external_reference=null&
+    payment_type=credit_card&
+    merchant_order_id=3087622728&
+    preference_id=419703172-0034208c-b760-4358-9e9e-625018219688&
+    site_id=MLA&
+    processing_mode=aggregator&
+    merchant_account_id=null */
