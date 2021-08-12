@@ -2,6 +2,7 @@ import mercadopago from 'mercadopago'
 import Inscription from '../models/inscription.js'
 import OrderMP from '../models/ordersMercadoPago.js'
 import axios from 'axios'
+import mongoose from 'mongoose'
 const title = process.env.title
 const unit_price = parseInt(process.env.price)
 mercadopago.configure({
@@ -27,7 +28,7 @@ const createPreference = async (req, res) => {
     const preference = await mercadopago.preferences.create({
       external_reference: orderSaved._id.toString(),
       statement_descriptor: 'CitroRodando',
-      notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/ipn`,
+      notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/ipn?source_news=webhooks`,
       back_urls: {
         success: `${process.env.NAME_APPLICATION}/success`,
         failure: `${process.env.NAME_APPLICATION}/pending`,
@@ -49,28 +50,31 @@ const createPreference = async (req, res) => {
 }
 const ipn = async (req, res) => {
   try {
-    if (req.params.topic === 'payment') {
+    console.log(req.body)
+    if (req.body.type === 'payment') {
       const findPay = await axios({
         method: 'GET',
-        URL: `https://api.mercadopago.com/v1/payments/${req.params.id}?${process.env.ACCESS_TOKEN_MP}`
+        URL: `https://api.mercadopago.com/v1/payments/${req.body.data.id}?${process.env.ACCESS_TOKEN_MP}`
       })
       if (findPay) {
         const { id, date_created, date_updated, status, status_detail, external_reference } = findPay
-        const { net_received_amount } = findPay.transaction_details
-        const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: external_reference },
+        const { net_received_amount, total_paid_amount } = findPay.transaction_details
+        const objectId = mongoose.Types.ObjectId(external_reference)
+        const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
           {
             id_Operacion: id,
             date_created,
             date_updated,
             status,
             status_detail,
-            net_received_amount
+            net_received_amount,
+            total_paid_amount
           }, {
             new: true
           })
+        console.log(findOrderAndUpdate)
       }
     }
-
     return res.status(200)
   } catch (e) {
     console.log(e.message)

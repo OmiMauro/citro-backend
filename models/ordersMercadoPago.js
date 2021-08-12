@@ -31,8 +31,29 @@ const orderSchema = new Schema({
   },
   net_received_amount: {
     type: Number
+  },
+  total_paid_amount: {
+    type: Number
   }
 })
 
 const modelOrder = mongoose.model('Order', orderSchema)
 export default modelOrder
+
+/*
+{
+  "id": 806459734,
+  "nickname": "TESTOZJVBH5J",
+  "password": "qatest7143",
+  "site_status": "active",
+  "email": "test_user_8045216@testuser.com"
+}
+
+2
+{
+  "id": 806468787,
+  "nickname": "TESTOX8FWS7L",
+  "password": "qatest5658",
+  "site_status": "active",
+  "email": "test_user_18834777@testuser.com"
+} */
