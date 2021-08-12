@@ -16,17 +16,14 @@ const createPreference = async (req, res) => {
       const inscription = await Inscription.create({ name, lastname, DNI, email, numberCell, provinceOrigin, locationOrigin })
       const savedIncription = await inscription.save()
     }
-    findInscription = await Inscription.findOne({ DNI }).select({ _id: 1 })
-    console.log(findInscription)
+    findInscription = await Inscription.findOne({ DNI })
     const createOrder = await OrderMP.create({
-      inscriptionId: findInscription._id,
       title,
       unit_price
-
     })
-
     const orderSaved = await createOrder.save()
-    console.log(orderSaved)
+    findInscription.orders.push(orderSaved._id)
+    await findInscription.save()
     const preference = await mercadopago.preferences.create({
       external_reference: orderSaved._id.toString(),
       statement_descriptor: 'CitroRodando',
@@ -45,39 +42,41 @@ const createPreference = async (req, res) => {
       }],
       installments: 12
     })
-    console.log(preference)
-    res.status(200).json({ init_point: preference.body.init_point, preference })
+    res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
     res.status(500).json({ error: true, msg: err.message })
   }
 }
-
-const feedback = (req, res) => {
-  res.json({
-    Payment: req.query.payment_id,
-    Status: req.query.status,
-    MerchantOrder: req.query.merchant_order_id
-  })
-}
 const ipn = async (req, res) => {
   try {
-    console.log(req.body)
-    if (req.params.type === 'payment') {
+    if (req.params.topic === 'payment') {
       const findPay = await axios({
         method: 'GET',
-        URL: `https://api.mercadopago.com/v1/payments/${req.params.data.id}?${process.env.ACCESS_TOKEN_MP}`
+        URL: `https://api.mercadopago.com/v1/payments/${req.params.id}?${process.env.ACCESS_TOKEN_MP}`
       })
-      console.log(findPay)
-      const { id, date_created, date_updated, status, status_detail, external_reference } = findPay
-      const { net_received_amount } = findPay.net_received_amount
+      if (findPay) {
+        const { id, date_created, date_updated, status, status_detail, external_reference } = findPay
+        const { net_received_amount } = findPay.transaction_details
+        const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: external_reference },
+          {
+            id_Operacion: id,
+            date_created,
+            date_updated,
+            status,
+            status_detail,
+            net_received_amount
+          }, {
+            new: true
+          })
+      }
     }
 
     return res.status(200)
   } catch (e) {
-    console.log(e)
+    console.log(e.message)
   }
 }
-export { createPreference, feedback, ipn }
+export { createPreference, ipn }
 
 /*
 if (req.params.type === 'payment') {
@@ -111,4 +110,10 @@ if (req.params.type === 'payment') {
     preference_id=419703172-0034208c-b760-4358-9e9e-625018219688&
     site_id=MLA&
     processing_mode=aggregator&
-    merchant_account_id=null */
+    merchant_account_id=null
+
+    /api/mercadopago/ipn?id=16341640060&topic=payment
+
+    /api/mercadopago/ipn?id=3090319927&topic=merchant_order
+
+    */
