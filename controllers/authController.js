@@ -20,16 +20,18 @@ const signin = async (req, res) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email })
-    if (user.authenticate(password)) {
-      // Generar el token firmado con el id y el secret
-      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
-      // persistir el token como 't como cookie con fecha de expiracion
-      res.cookie('t', token, { expire: new Date() + 9999 })
-      const { _id, name, email, role } = user
-      return res.json({ token, user: { _id, email, name, role } })
-    } else {
-      res.status(401).json({ error: 'Email o contraseña incorrectas. ' })
+    if (!user) {
+      return res.status(400).json({ error: ' El usuario con el email ingresado no existe!' })
     }
+    if (!user.authenticate(password)) {
+      return res.status(401).json({ error: 'Email o contraseña incorrectas. ' })
+    }
+    // Generar el token firmado con el id y el secret
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
+    // persistir el token como 't como cookie con fecha de expiracion
+    res.cookie('t', token, { expire: new Date() + 9999 })
+    const { _id, name, role } = user
+    return res.json({ token, user: { _id, email, name, role } })
   } catch (error) {
     return res.status(400).json({ error: 'El usuario con el email ingresado no existe. Por favor, contactese con el administrador!' })
   }
@@ -45,7 +47,6 @@ const requireSignin = expressJwt({
 })
 
 const isAuth = (req, res, next) => {
-  console.log(req.profile, req.auth)
   const user = req.profile && req.auth && req.profile._id == req.auth._id
   if (!user) {
     return res.status(403).json({ error: 'Acceso denegado' })

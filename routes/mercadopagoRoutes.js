@@ -1,9 +1,10 @@
 import express from 'express'
-import { createPreference, ipn } from '../controllers/mercadopagoController.js'
+import { createPreference, webhook } from '../controllers/mercadopagoController.js'
+import { inscriptionValidator } from '../validator/index.js'
+
 const Router = express.Router()
 
-Router.post('/mercadopago/create_preference', createPreference)
-Router.post('/mercadopago/ipn/:type/:data.id', ipn)
-/* Router.get('/feedback', feedback)
- */
+Router.post('/mercadopago/create_preference', inscriptionValidator, createPreference)
+Router.post('/mercadopago/webhook', webhook)
+
 export default Router

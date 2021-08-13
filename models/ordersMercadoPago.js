@@ -23,7 +23,7 @@ const orderSchema = new Schema({
   date_created: {
     type: Date
   },
-  date_updated: {
+  date_last_updated: {
     type: Date
   },
   date_approved: {
@@ -35,7 +35,10 @@ const orderSchema = new Schema({
   total_paid_amount: {
     type: Number
   }
-})
+}, {
+  timestamps: true
+}
+)
 
 const modelOrder = mongoose.model('Order', orderSchema)
 export default modelOrder

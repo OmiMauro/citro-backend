@@ -28,7 +28,7 @@ const createPreference = async (req, res) => {
     const preference = await mercadopago.preferences.create({
       external_reference: orderSaved._id.toString(),
       statement_descriptor: 'CitroRodando',
-      notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/ipn?source_news=webhooks`,
+      notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook?source_news=webhooks`,
       back_urls: {
         success: `${process.env.NAME_APPLICATION}/success`,
         failure: `${process.env.NAME_APPLICATION}/pending`,
@@ -48,39 +48,45 @@ const createPreference = async (req, res) => {
     res.status(500).json({ error: true, msg: err.message })
   }
 }
-const ipn = async (req, res) => {
+const webhook = async (req, res) => {
   try {
-    console.log(req.body)
-    if (req.body.type === 'payment') {
+    let findOrderAndUpdate
+
+    if (req.query.type === 'payment') {
+      const id = req.query['data.id']
       const findPay = await axios({
         method: 'GET',
-        URL: `https://api.mercadopago.com/v1/payments/${req.body.data.id}?${process.env.ACCESS_TOKEN_MP}`
+        url: `https://api.mercadopago.com/v1/payments/${id}?access_token=${process.env.ACCESS_TOKEN_MP}`
       })
-      if (findPay) {
-        const { id, date_created, date_updated, status, status_detail, external_reference } = findPay
-        const { net_received_amount, total_paid_amount } = findPay.transaction_details
+
+      console.log(findPay.data)
+      if (findPay.statusText === 'OK') {
+        const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, operation_type } = findPay.data
+        const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
         const objectId = mongoose.Types.ObjectId(external_reference)
-        const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
+        findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
           {
             id_Operacion: id,
             date_created,
-            date_updated,
+            date_last_updated,
+            date_approved,
             status,
             status_detail,
             net_received_amount,
-            total_paid_amount
+            total_paid_amount,
+            operation_type
           }, {
             new: true
           })
         console.log(findOrderAndUpdate)
       }
     }
-    return res.status(200)
+    return res.status(200).json()
   } catch (e) {
     console.log(e.message)
   }
 }
-export { createPreference, ipn }
+export { createPreference, webhook }
 
 /*
 if (req.params.type === 'payment') {
@@ -102,22 +108,6 @@ if (req.params.type === 'payment') {
       }
     } */
 
-/*
-    https://citrorodando.herokuapp.com/success?
-    collection_id=1239676416&
-    collection_status=approved&
-    payment_id=1239676416&
-    status=approved&
-    external_reference=null&
-    payment_type=credit_card&
-    merchant_order_id=3087622728&
-    preference_id=419703172-0034208c-b760-4358-9e9e-625018219688&
-    site_id=MLA&
-    processing_mode=aggregator&
-    merchant_account_id=null
-
-    /api/mercadopago/ipn?id=16341640060&topic=payment
-
-    /api/mercadopago/ipn?id=3090319927&topic=merchant_order
-
-    */
+/* NAME_APPLICATION = http://localhost:9000
+ACCESS_TOKEN_MP = TEST-2136509707106412-073019-41d3ff82e295f7b42a9aa4321c5321e1-419703172
+ */
