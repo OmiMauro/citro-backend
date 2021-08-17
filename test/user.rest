@@ -18,5 +18,5 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:9000/api/secret/&userId=61111ec822958e1dfbaa6253 HTTP/1.1
+GET http://localhost:9000/api/secret/userId=611bb47b42102c26999deec0
 Content-Type: application/json
