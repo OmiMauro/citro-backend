@@ -12,28 +12,35 @@ const orderSchema = new Schema({
     type: Number
   },
   status: {
-    type: String
+    type: String,
+    default: 'pending'
   },
   status_detail: {
-    type: String
+    type: String,
+    default: 'not-accredited'
   },
   id_Operacion: {
     type: String
   },
   date_created: {
-    type: Date
+    type: Date,
+    default: Date.now()
   },
   date_last_updated: {
-    type: Date
+    type: Date,
+    default: Date.now()
   },
   date_approved: {
-    type: Date
+    type: Date,
+    default: Date.now()
   },
   net_received_amount: {
-    type: Number
+    type: Number,
+    default: 0
   },
   total_paid_amount: {
-    type: Number
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true
