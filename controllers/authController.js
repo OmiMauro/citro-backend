@@ -19,6 +19,7 @@ const signup = async (req, res) => {
 const signin = async (req, res) => {
   try {
     const { email, password } = req.body
+    console.log(email, password)
     const user = await User.findOne({ email })
     if (!user) {
       return res.status(400).json({ error: ' El usuario con el email ingresado no existe!' })
@@ -27,7 +28,7 @@ const signin = async (req, res) => {
       return res.status(401).json({ error: 'Email o contraseña incorrectas. ' })
     }
     // Generar el token firmado con el id y el secret
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
+    const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
     // persistir el token como 't como cookie con fecha de expiracion
     res.cookie('t', token, { expire: new Date() + 9999 })
     const { _id, name, role } = user
@@ -54,10 +55,11 @@ const isAuth = (req, res, next) => {
   next()
 }
 const isAdmin = async (req, res, next) => {
-  if (req.profile.role === 0) {
+  if (req.profile.role === 1) {
+    next()
+  } else {
     return res.status(403).json({ error: 'Recursos solo para administradores.' })
   }
-  next()
 }
 
 export { signup, signin, signout, requireSignin, isAuth, isAdmin }
