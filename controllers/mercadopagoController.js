@@ -1,6 +1,6 @@
 import mercadopago from 'mercadopago'
 import Inscription from '../models/inscription.js'
-import OrderMP from '../models/ordersMercadoPago.js'
+import OrderMP from '../models/orders.js'
 import axios from 'axios'
 import mongoose from 'mongoose'
 const title = process.env.title
@@ -20,14 +20,15 @@ const createPreference = async (req, res) => {
     findInscription = await Inscription.findOne({ DNI })
     const createOrder = await OrderMP.create({
       title,
-      unit_price
+      unit_price,
+      inscription: findInscription._id
     })
     const orderSaved = await createOrder.save()
     findInscription.orders.push(orderSaved._id)
     await findInscription.save()
     const preference = await mercadopago.preferences.create({
       external_reference: orderSaved._id.toString(),
-      statement_descriptor: 'CitroRodando',
+      statement_descriptor: `${title}`,
       notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook?source_news=webhooks`,
       back_urls: {
         success: `${process.env.NAME_APPLICATION}/success`,
@@ -39,9 +40,8 @@ const createPreference = async (req, res) => {
         unit_price,
         quantity: 1,
         currency_id: 'ARS',
-        description: 'Inscripción para el evento a realizarse en Jardín América, Misiones, los días 20 y 21 de noviembre.'
-      }],
-      installments: 12
+        description: `Inscripción para el encuentro de autos cuyo DNI: ${DNI}`
+      }]
     })
     res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
@@ -51,15 +51,12 @@ const createPreference = async (req, res) => {
 const webhook = async (req, res) => {
   try {
     let findOrderAndUpdate
-
     if (req.query.type === 'payment') {
       const id = req.query['data.id']
       const findPay = await axios({
         method: 'GET',
         url: `https://api.mercadopago.com/v1/payments/${id}?access_token=${process.env.ACCESS_TOKEN_MP}`
       })
-
-      console.log(findPay.data)
       if (findPay.statusText === 'OK') {
         const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, operation_type } = findPay.data
         const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
@@ -78,10 +75,9 @@ const webhook = async (req, res) => {
           }, {
             new: true
           })
-        console.log(findOrderAndUpdate)
       }
     }
-    return res.status(200).json()
+    return res.status(200)
   } catch (e) {
     console.log(e.message)
   }

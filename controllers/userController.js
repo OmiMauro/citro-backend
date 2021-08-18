@@ -3,7 +3,7 @@ import { errorHandler } from '../helpers/dbErrorHandlers.js'
 
 const userById = async (req, res, next, id) => {
   try {
-    const user = await User.findById(id).exec()
+    const user = await User.findOne({ _id: id })
     req.profile = user
     next()
   } catch (error) {

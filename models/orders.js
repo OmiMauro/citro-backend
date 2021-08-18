@@ -1,8 +1,11 @@
 import mongoose from 'mongoose'
-import Inscription from './inscription.js'
 const Schema = mongoose.Schema
 
 const orderSchema = new Schema({
+  inscription: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Inscriptions'
+  },
   title: {
     type: String,
     trim: true,
@@ -47,7 +50,7 @@ const orderSchema = new Schema({
 }
 )
 
-const modelOrder = mongoose.model('Order', orderSchema)
+const modelOrder = mongoose.model('Orders', orderSchema)
 export default modelOrder
 
 /*

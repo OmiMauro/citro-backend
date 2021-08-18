@@ -18,8 +18,8 @@ const signup = async (req, res) => {
 }
 const signin = async (req, res) => {
   try {
+    setTimeout(() => { console.log('Timeeer') }, 220000)
     const { email, password } = req.body
-    console.log(email, password)
     const user = await User.findOne({ email })
     if (!user) {
       return res.status(400).json({ error: ' El usuario con el email ingresado no existe!' })
@@ -32,7 +32,7 @@ const signin = async (req, res) => {
     // persistir el token como 't como cookie con fecha de expiracion
     res.cookie('t', token, { expire: new Date() + 9999 })
     const { _id, name, role } = user
-    return res.json({ token, user: { _id, email, name, role } })
+    return res.status(200).json({ token, user: { _id, email, name, role } })
   } catch (error) {
     return res.status(400).json({ error: 'El usuario con el email ingresado no existe. Por favor, contactese con el administrador!' })
   }
@@ -48,18 +48,19 @@ const requireSignin = expressJwt({
 })
 
 const isAuth = (req, res, next) => {
-  const user = req.profile && req.auth && req.profile._id == req.auth._id
+  const user = req.profile && req.auth && req.profile._id === req.auth._id
+  console.log(user)
   if (!user) {
     return res.status(403).json({ error: 'Acceso denegado' })
   }
   next()
 }
 const isAdmin = async (req, res, next) => {
-  if (req.profile.role === 1) {
-    next()
-  } else {
+  console.log(req.profile)
+  if (req.profile.role === 0) {
     return res.status(403).json({ error: 'Recursos solo para administradores.' })
   }
+  next()
 }
 
 export { signup, signin, signout, requireSignin, isAuth, isAdmin }

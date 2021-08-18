@@ -45,12 +45,12 @@ const inscriptionSchema = new Schema({
   },
   orders: [{
     type: Schema.Types.ObjectId,
-    ref: 'Order'
+    ref: 'Orders'
   }]
 }, {
   timestamps: true
 })
 
 inscriptionSchema.plugin(uniqueValidator)
-const Inscription = mongoose.model('Inscription', inscriptionSchema)
+const Inscription = mongoose.model('Inscriptions', inscriptionSchema)
 export default Inscription
