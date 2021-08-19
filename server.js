@@ -4,6 +4,7 @@ import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import path from 'path'
 import expressValidator from 'express-validator'
 import dotenv from 'dotenv/config'
 // Routes of application
@@ -14,7 +15,10 @@ import userRoutes from './routes/userRoute.js'
 import inscriptionRoutes from './routes/inscriptionRoute.js'
 import mercadopagoRoutes from './routes/mercadopagoRoutes.js'
 const App = express()
-
+App.use(express.static(process.cwd() + '/build'))
+App.get('*', function (request, response) {
+  response.sendFile(path.resolve(process.cwd(), 'build', 'index.html'))
+})
 App.use(express.static('build'))
 // db
 mongoose.connect(process.env.DATABASE, {
