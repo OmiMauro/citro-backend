@@ -3,11 +3,14 @@ import { errorHandler } from '../helpers/dbErrorHandlers.js'
 
 const userById = async (req, res, next, id) => {
   try {
-    const user = await User.findOne({ _id: id })
+    const user = await User.findById(id)
+    if (!user) {
+      return res.status(400).json({ error: 'Usuario no encontrado' })
+    }
     req.profile = user
     next()
   } catch (error) {
-    res.status(400).json({ error: 'Usuario no encontrado' })
+    res.status(400).json({ error })
   }
 }
 const read = (req, res) => {

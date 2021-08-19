@@ -12,18 +12,23 @@ const signup = async (req, res) => {
       userSaved.hashedPassword = undefined
       res.json(userSaved)
     }
+    if (!userSaved) {
+      return res.status(400).json({
+        err: 'Error'
+      })
+    }
   } catch (error) {
     return res.status(400).json({ err: errorHandler(error) })
   }
 }
 const signin = async (req, res) => {
   try {
-    setTimeout(() => { console.log('Timeeer') }, 220000)
     const { email, password } = req.body
     const user = await User.findOne({ email })
     if (!user) {
       return res.status(400).json({ error: ' El usuario con el email ingresado no existe!' })
     }
+    console.log('Autenticate user', user.authenticate(password))
     if (!user.authenticate(password)) {
       return res.status(401).json({ error: 'Email o contraseña incorrectas. ' })
     }
@@ -49,14 +54,14 @@ const requireSignin = expressJwt({
 
 const isAuth = (req, res, next) => {
   const user = req.profile && req.auth && req.profile._id === req.auth._id
-  console.log(user)
+  console.log(user, req.profile, req.auth)
   if (!user) {
     return res.status(403).json({ error: 'Acceso denegado' })
   }
   next()
 }
+
 const isAdmin = async (req, res, next) => {
-  console.log(req.profile)
   if (req.profile.role === 0) {
     return res.status(403).json({ error: 'Recursos solo para administradores.' })
   }

@@ -5,7 +5,7 @@ import { userById, read, update } from '../controllers/userController.js'
 
 const Router = express.Router()
 
-Router.get('/secret/:userId', requireSignin, isAuth, isAdmin, (req, res) => {
+Router.get('/secret/:userId', requireSignin, isAdmin, (req, res) => {
   res.json({
     user: req.profile
   })

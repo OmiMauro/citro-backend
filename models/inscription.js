@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 const Schema = mongoose.Schema
-
+const { ObjectId } = mongoose.Schema
 const inscriptionSchema = new Schema({
   name: {
     type: String,
@@ -44,13 +44,13 @@ const inscriptionSchema = new Schema({
     required: [true, 'La localidad de origen es obligatorio']
   },
   orders: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Orders'
+    type: ObjectId,
+    ref: 'Order'
   }]
 }, {
   timestamps: true
 })
 
 inscriptionSchema.plugin(uniqueValidator)
-const Inscription = mongoose.model('Inscriptions', inscriptionSchema)
+const Inscription = mongoose.model('Inscription', inscriptionSchema)
 export default Inscription

@@ -1,10 +1,11 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
+const { ObjectId } = mongoose.Schema
 
 const orderSchema = new Schema({
   inscription: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Inscriptions'
+    type: ObjectId,
+    ref: 'Inscription'
   },
   title: {
     type: String,
@@ -50,23 +51,5 @@ const orderSchema = new Schema({
 }
 )
 
-const modelOrder = mongoose.model('Orders', orderSchema)
-export default modelOrder
-
-/*
-{
-  "id": 806459734,
-  "nickname": "TESTOZJVBH5J",
-  "password": "qatest7143",
-  "site_status": "active",
-  "email": "test_user_8045216@testuser.com"
-}
-
-2
-{
-  "id": 806468787,
-  "nickname": "TESTOX8FWS7L",
-  "password": "qatest5658",
-  "site_status": "active",
-  "email": "test_user_18834777@testuser.com"
-} */
+const Order = mongoose.model('Order', orderSchema)
+export default Order

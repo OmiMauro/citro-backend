@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 import crypto from 'crypto'
 import { v1 } from 'uuid'
+import { log } from 'console'
+
 const uuidv1 = v1
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,8 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   salt: String,
   role: {
-    type: Number,
-    default: 0
+    type: Number
   }
 
 }, {
@@ -43,7 +44,8 @@ userSchema.virtual('password')
 
 userSchema.methods = {
   authenticate: function (plainText) {
-    return this.encryptPassword(plainText) === this.hashedPassword
+    console.log(plainText)
+    return this.encryptPassword(plainText) == this.hashedPassword
   },
 
   encryptPassword: function (password) {
@@ -59,6 +61,6 @@ userSchema.methods = {
     }
   }
 }
-const userModel = mongoose.model('Users', userSchema)
+const User = mongoose.model('User', userSchema)
 
-export default userModel
+export default User

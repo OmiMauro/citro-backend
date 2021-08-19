@@ -14,12 +14,9 @@ import authRoutes from './routes/authRoute.js'
 import userRoutes from './routes/userRoute.js'
 import inscriptionRoutes from './routes/inscriptionRoute.js'
 import mercadopagoRoutes from './routes/mercadopagoRoutes.js'
+
 const App = express()
-App.use(express.static(process.cwd() + '/build'))
-App.get('*', function (request, response) {
-  response.sendFile(path.resolve(process.cwd(), 'build', 'index.html'))
-})
-App.use(express.static('build'))
+
 // db
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
@@ -41,6 +38,11 @@ App.use('/api', userRoutes)
 App.use('/api', inscriptionRoutes)
 App.use('/api', mercadopagoRoutes)
 
+App.use(express.static(process.cwd() + '/build'))
+App.get('*', function (request, response) {
+  response.sendFile(path.resolve(process.cwd(), 'build', 'index.html'))
+})
+App.use(express.static('build'))
 const port = process.env.PORT || 8000
 
 App.listen(port, () => {
