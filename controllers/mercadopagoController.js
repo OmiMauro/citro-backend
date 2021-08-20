@@ -3,8 +3,8 @@ import Inscription from '../models/inscription.js'
 import OrderMP from '../models/orders.js'
 import axios from 'axios'
 import mongoose from 'mongoose'
-const title = process.env.title
 const unit_price = parseInt(process.env.price)
+const statement_descriptor = process.env.STATEMENT_DESCRIPTOR
 mercadopago.configure({
   access_token: `${process.env.ACCESS_TOKEN_MP}`
 })
@@ -19,7 +19,7 @@ const createPreference = async (req, res) => {
     }
     findInscription = await Inscription.findOne({ DNI })
     const createOrder = await OrderMP.create({
-      title,
+      title: `DNI: ${DNI}`,
       unit_price,
       inscription: findInscription._id
     })
@@ -28,7 +28,7 @@ const createPreference = async (req, res) => {
     await findInscription.save()
     const preference = await mercadopago.preferences.create({
       external_reference: orderSaved._id.toString(),
-      statement_descriptor: `${title}`,
+      statement_descriptor,
       notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook?source_news=webhooks`,
       back_urls: {
         success: `${process.env.NAME_APPLICATION}/success`,
@@ -36,16 +36,17 @@ const createPreference = async (req, res) => {
         pending: `${process.env.NAME_APPLICATION}/rejected`
       },
       items: [{
-        title,
+        title: `DNI: ${DNI}`,
         unit_price,
         quantity: 1,
         currency_id: 'ARS',
         description: `Inscripción para el encuentro de autos cuyo DNI: ${DNI}`
       }]
     })
+    console.log(preference)
     res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
-    res.status(500).json({ error: true, msg: err.message })
+    res.status(500).json({ error: err.message })
   }
 }
 const webhook = async (req, res) => {
@@ -60,6 +61,7 @@ const webhook = async (req, res) => {
       if (findPay.statusText === 'OK') {
         const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, operation_type } = findPay.data
         const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
+        // Para buscar la orden en la base de datos
         const objectId = mongoose.Types.ObjectId(external_reference)
         findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
           {
@@ -76,11 +78,10 @@ const webhook = async (req, res) => {
             new: true
           })
       }
-      console.log(findOrderAndUpdate)
     }
     return res.status(200)
-  } catch (e) {
-    console.log(e.message)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 }
 export { createPreference, webhook }
@@ -104,7 +105,3 @@ if (req.params.type === 'payment') {
         }
       }
     } */
-
-/* NAME_APPLICATION = http://localhost:9000
-ACCESS_TOKEN_MP = TEST-2136509707106412-073019-41d3ff82e295f7b42a9aa4321c5321e1-419703172
- */

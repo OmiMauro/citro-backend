@@ -7,13 +7,13 @@ const inscriptionSchema = new Schema({
     type: String,
     required: [true, 'El nombre es obligatorio'],
     trim: true,
-    uppercasse: true
+    uppercase: true
   },
   lastname: {
     type: String,
     required: [true, 'El apellido es obligatorio'],
     trim: true,
-    uppercasse: true
+    uppercase: true
   },
   DNI: {
     type: Number,
@@ -24,7 +24,8 @@ const inscriptionSchema = new Schema({
   email: {
     type: String,
     lowercase: true,
-    trim: true
+    trim: true,
+    required: [true, 'El email es obligatorio']
     /* match: [/\S+@\S+\.\S+/] */
   },
   numberCell: {
@@ -34,14 +35,18 @@ const inscriptionSchema = new Schema({
   provinceOrigin: {
     type: String,
     trim: true,
-    required: [true, 'La provincia de origen es obligatorio. ']
+    required: ,
+    uppercase: true
+    [true, 'La provincia de origen es obligatorio. ']
 
   },
   locationOrigin: {
     type: String,
     default: 'Otro',
     trim: true,
-    required: [true, 'La localidad de origen es obligatorio']
+    required: [true, 'La localidad de origen es obligatorio'],
+    uppercase: true
+
   },
   orders: [{
     type: ObjectId,

@@ -21,7 +21,7 @@ const addInscription = async (req, res) => {
 
 const listInscriptions = async (req, res) => {
   try {
-    const listInscriptions = await Inscription.find({}).populate('orders', { _id: 0 })
+    const listInscriptions = await Inscription.find({}).sort({ lastname: 1, name: 1 }).populate('orders', { _id: 0 })
     /* .sort({ lastname: 1, name: 1 }).select({ _id: 0 }).exec() */
     console.log(listInscriptions)
     res.status(201).json({ listInscriptions })
