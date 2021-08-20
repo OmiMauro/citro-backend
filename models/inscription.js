@@ -35,10 +35,8 @@ const inscriptionSchema = new Schema({
   provinceOrigin: {
     type: String,
     trim: true,
-    required: ,
+    required: [true, 'La provincia de origen es obligatorio. '],
     uppercase: true
-    [true, 'La provincia de origen es obligatorio. ']
-
   },
   locationOrigin: {
     type: String,
@@ -46,7 +44,6 @@ const inscriptionSchema = new Schema({
     trim: true,
     required: [true, 'La localidad de origen es obligatorio'],
     uppercase: true
-
   },
   orders: [{
     type: ObjectId,
