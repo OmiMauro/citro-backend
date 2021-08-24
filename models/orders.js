@@ -45,6 +45,9 @@ const orderSchema = new Schema({
   total_paid_amount: {
     type: Number,
     default: 0
+  },
+  payment_type_id: {
+    type: String
   }
 }, {
   timestamps: true

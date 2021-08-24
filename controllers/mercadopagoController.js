@@ -41,9 +41,17 @@ const createPreference = async (req, res) => {
         quantity: 1,
         currency_id: 'ARS',
         description: `Inscripción para el encuentro de autos cuyo DNI: ${DNI}`
-      }]
+      }],
+      payer: {
+        name: name,
+        surname: lastname,
+        email: email,
+        identification: {
+          type: 'DNI',
+          number: DNI
+        }
+      }
     })
-    console.log(preference)
     res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
     res.status(500).json({ error: err.message })
@@ -51,38 +59,44 @@ const createPreference = async (req, res) => {
 }
 const webhook = async (req, res) => {
   try {
-    let findOrderAndUpdate
     if (req.query.type === 'payment') {
       const id = req.query['data.id']
-      const findPay = await axios({
-        method: 'GET',
-        url: `https://api.mercadopago.com/v1/payments/${id}?access_token=${process.env.ACCESS_TOKEN_MP}`
-      })
+      const findPay = await findPayMP(id)
       if (findPay.statusText === 'OK') {
-        const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, operation_type } = findPay.data
-        const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
-        // Para buscar la orden en la base de datos
-        const objectId = mongoose.Types.ObjectId(external_reference)
-        findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
-          {
-            id_Operacion: id,
-            date_created,
-            date_last_updated,
-            date_approved,
-            status,
-            status_detail,
-            net_received_amount,
-            total_paid_amount,
-            operation_type
-          }, {
-            new: true
-          })
+        await updateOrderDB(findPay)
       }
     }
     return res.status(200)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
+}
+
+const findPayMP = async (id) => {
+  const response = await axios({
+    method: 'GET',
+    url: `https://api.mercadopago.com/v1/payments/${id}?access_token=${process.env.ACCESS_TOKEN_MP}`
+  })
+  return response
+}
+
+const updateOrderDB = async (findPay) => {
+  const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, operation_type, payment_type_id } = findPay.data
+  const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
+  const objectId = mongoose.Types.ObjectId(external_reference)
+  const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
+    {
+      id_Operacion: id,
+      date_created,
+      date_last_updated,
+      date_approved,
+      status,
+      status_detail,
+      net_received_amount,
+      total_paid_amount,
+      operation_type,
+      payment_type_id
+    })
 }
 export { createPreference, webhook }
 
