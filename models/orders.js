@@ -48,6 +48,10 @@ const orderSchema = new Schema({
   },
   payment_type_id: {
     type: String
+  },
+  transaction_amount_refunded: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

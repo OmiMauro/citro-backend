@@ -50,7 +50,9 @@ const createPreference = async (req, res) => {
           type: 'DNI',
           number: DNI
         }
-      }
+      },
+      expires: true,
+      date_of_expiration: '2021-11-20T00:00:00.000-04:00'
     })
     res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
@@ -59,15 +61,16 @@ const createPreference = async (req, res) => {
 }
 const webhook = async (req, res) => {
   try {
+    res.status(200).end()
     if (req.query.type === 'payment') {
       const id = req.query['data.id']
       const findPay = await findPayMP(id)
       if (findPay.statusText === 'OK') {
         await updateOrderDB(findPay)
+        console.log(updateOrderDB)
       }
     }
     console.log('before res Mp')
-    return res.status(200)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
@@ -82,7 +85,7 @@ const findPayMP = async (id) => {
 }
 
 const updateOrderDB = async (findPay) => {
-  const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, operation_type, payment_type_id } = findPay.data
+  const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, transaction_amount_refunded, operation_type, payment_type_id } = findPay.data
   const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
   const objectId = mongoose.Types.ObjectId(external_reference)
   const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
@@ -96,7 +99,8 @@ const updateOrderDB = async (findPay) => {
       net_received_amount,
       total_paid_amount,
       operation_type,
-      payment_type_id
+      payment_type_id,
+      transaction_amount_refunded
     })
 }
 export { createPreference, webhook }
