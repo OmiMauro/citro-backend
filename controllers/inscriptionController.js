@@ -20,12 +20,11 @@ const addInscription = async (req, res) => {
 }
 const getInscripcionByDNI = async (req, res) => {
   try {
-    console.log(req.body)
     const { email, DNI } = req.body
-    const findInscription = await Inscription.findOne({ DNI }).populate('order', { status: 1 })
-    console.log(findInscription)
+
+    const findInscription = await Inscription.findOne({ DNI }, { name: 1, lastname: 1, DNI: 1, email, orders: 1, _id: 0 }).populate('orders', { status: 1, _id: 0 })
     if (findInscription && findInscription.email === email) {
-      res.status(201).json({ message: 'El DNI ingresado ya se encuentra registrado y el  Te esperamos!', findInscription })
+      return res.status(201).json({ findInscription })
     }
   } catch (e) {
     res.status(500).json({ message: e.message })
@@ -77,7 +76,27 @@ const deleteAllInscriptionsAndOrders = async (req, res) => {
     res.status(500).json({ message: e.message })
   }
 }
+const findDataInscription = async (req, res) => {
+  try {
+    const reference = req.params.external_reference
+    const response = await Orders.findById(reference, { inscription: 1 })
+      .populate('inscription', { DNI: 1, name: 1, lastname: 1 })
+    if (response) {
+      const newInscription = {
+        DNI: response.inscription.DNI,
+        name: response.inscription.name,
+        lastname: response.inscription.lastname
+      }
+      res.status(201).json({ info: newInscription })
+    } else {
+      res.status(404)
+    }
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}
 export {
   addInscription, listInscriptions, inscriptionsApproved,
-  inscriptionsPending, inscriptionsRejected, getInscripcionByDNI, deleteAllInscriptionsAndOrders
+  inscriptionsPending, inscriptionsRejected, getInscripcionByDNI, deleteAllInscriptionsAndOrders,
+  findDataInscription
 }

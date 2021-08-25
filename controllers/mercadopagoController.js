@@ -32,8 +32,8 @@ const createPreference = async (req, res) => {
       notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook?source_news=webhooks`,
       back_urls: {
         success: `${process.env.NAME_APPLICATION}/success`,
-        failure: `${process.env.NAME_APPLICATION}/pending`,
-        pending: `${process.env.NAME_APPLICATION}/rejected`
+        pending: `${process.env.NAME_APPLICATION}/pending`,
+        failure: `${process.env.NAME_APPLICATION}/rejected`
       },
       items: [{
         title: `DNI: ${DNI}`,
