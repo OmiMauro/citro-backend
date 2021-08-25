@@ -26,6 +26,7 @@ const getInscripcionByDNI = async (req, res) => {
     if (findInscription && findInscription.email === email) {
       return res.status(201).json({ findInscription })
     }
+    return res.status(404).json({ message: 'No se encontró una inscripción relacionada a los datos ingresados.' })
   } catch (e) {
     res.status(500).json({ message: e.message })
   }
@@ -33,7 +34,9 @@ const getInscripcionByDNI = async (req, res) => {
 
 const listInscriptions = async (req, res) => {
   try {
-    const listInscriptions = await Orders.find({}).populate('inscription', { orders: 0, _id: 0, createdAt: 0, updatedAt: 0 })
+    const listInscriptions = await Orders.find({})
+      .populate('inscription', { orders: 0, _id: 0, createdAt: 0, updatedAt: 0 })
+      .sort({ 'inscription.lastname': 1, 'inscription.name': 1 })
     /* .sort({ lastname: 1, name: 1 }).select({ _id: 0 }).exec() */
     res.status(201).json({ listInscriptions })
   } catch (e) {
@@ -51,7 +54,7 @@ const inscriptionsApproved = async (req, res) => {
 }
 const inscriptionsPending = async (req, res) => {
   try {
-    const response = await Orders.find({ status: { $ne: 'approved' } }).populate('inscription', { name: 1, lastname: 1, DNI: 1 })
+    const response = await Orders.find({ status: 'pending' }).populate('inscription', { name: 1, lastname: 1, DNI: 1 })
     res.status(201).json({ response })
   } catch (e) {
     res.status(500).json({ message: e.message })

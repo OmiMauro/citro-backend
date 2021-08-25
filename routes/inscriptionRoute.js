@@ -12,10 +12,9 @@ Router.post('/inscription', inscriptionValidator, addInscription)
 Router.post('/inscriptionByDNI', getInscriptionValidator, getInscripcionByDNI)
 Router.get('/inscription/:external_reference', findDataInscription)
 /* Router.delete('/inscription/:userId', requireSignin, isAdmin, deleteAllInscriptionsAndOrders) */
-Router.get('/inscription/:userId', requireSignin, isAdmin, listInscriptions)
+Router.get('/inscription/all/:userId', requireSignin, isAdmin, listInscriptions)
 Router.get('/inscription/approved/:userId', requireSignin, isAdmin, inscriptionsApproved)
 Router.get('/inscription/rejected/:userId', requireSignin, isAdmin, inscriptionsRejected)
 Router.get('/inscription/pending/:userId', requireSignin, isAdmin, inscriptionsPending)
-Router.get('/inscription')
 Router.param('userId', userById)
 export default Router

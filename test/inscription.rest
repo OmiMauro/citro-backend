@@ -1,6 +1,6 @@
 
 ###
-GET http://localhost:9000/api/inscription/611bb47b42102c26999deec0 HTTP/1.1
+GET http://localhost:9000/api/inscription/all/611bb47b42102c26999deec0 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTFiYjQ3YjQyMTAyYzI2OTk5ZGVlYzAiLCJpYXQiOjE2MjkzNzY1Nzd9.Mhzv1EVtZKWkj_R467novnMXAtXEZiVlmMhkLJEX-BU
 
 
