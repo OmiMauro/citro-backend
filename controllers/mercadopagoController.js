@@ -69,7 +69,6 @@ const webhook = async (req, res) => {
         await updateOrderDB(findPay)
       }
     }
-    console.log('before res Mp')
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
@@ -87,6 +86,7 @@ const updateOrderDB = async (findPay) => {
   const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, transaction_amount_refunded, operation_type, payment_type_id } = findPay.data
   const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
   const objectId = mongoose.Types.ObjectId(external_reference)
+  const netoRecivido = (net_received_amount - transaction_amount_refunded)
   const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
     {
       id_Operacion: id,
@@ -95,7 +95,7 @@ const updateOrderDB = async (findPay) => {
       date_approved,
       status,
       status_detail,
-      net_received_amount: net_received_amount - transaction_amount_refunded,
+      net_received_amount: netoRecivido,
       total_paid_amount,
       operation_type,
       payment_type_id,
