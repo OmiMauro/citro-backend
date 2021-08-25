@@ -67,7 +67,6 @@ const webhook = async (req, res) => {
       const findPay = await findPayMP(id)
       if (findPay.statusText === 'OK') {
         await updateOrderDB(findPay)
-        console.log(updateOrderDB)
       }
     }
     console.log('before res Mp')
@@ -96,7 +95,7 @@ const updateOrderDB = async (findPay) => {
       date_approved,
       status,
       status_detail,
-      net_received_amount,
+      net_received_amount: net_received_amount - transaction_amount_refunded,
       total_paid_amount,
       operation_type,
       payment_type_id,
