@@ -69,8 +69,8 @@ const webhook = async (req, res) => {
         await updateOrderDB(findPay)
       }
     }
-  } catch (err) {
-    res.status(500).json({ error: err.message })
+  } catch (error) {
+    console.log(error)
   }
 }
 
