@@ -45,7 +45,6 @@ const inscriptionValidator = (req, res, next) => {
   next()
 }
 const getInscriptionValidator = (req, res, next) => {
-  console.log(req.body)
   req.check('email', 'El email deberia ser entre 4 y 32 caracteres')
     .matches(/.+\@.+\..+/)
     .withMessage('El email debe contener @')
@@ -54,9 +53,7 @@ const getInscriptionValidator = (req, res, next) => {
       max: 32
     })
   req.check('DNI', 'El DNI es obligatorio').notEmpty()
-
   const errors = req.validationErrors()
-
   if (errors) {
     const firstError = errors.map(error => error.msg)[0]
     return res.status(400).json({ error: firstError })

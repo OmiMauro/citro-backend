@@ -28,7 +28,6 @@ const signin = async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: ' El usuario con el email ingresado no existe!' })
     }
-    console.log('Autenticate user', user.authenticate(password))
     if (!user.authenticate(password)) {
       return res.status(401).json({ error: 'Email o contraseña incorrectas. ' })
     }
@@ -54,7 +53,6 @@ const requireSignin = expressJwt({
 
 const isAuth = (req, res, next) => {
   const user = req.profile && req.auth && req.profile._id === req.auth._id
-  console.log(user, req.profile, req.auth)
   if (!user) {
     return res.status(403).json({ error: 'Acceso denegado' })
   }
