@@ -112,7 +112,7 @@ const inscriptionsPending = async (req, res) => {
 }
 const inscriptionsRejected = async (req, res) => {
   try {
-    const response = await Orders.find({ status: 'rejected' }, {
+    const response = await Orders.find({ $or: [{ status: 'rejected' }, { status: 'cancelled' }] }, {
       status: 1,
       status_detail: 1,
       date_last_updated: 1,

@@ -11,10 +11,48 @@ mercadopago.configure({
 
 const createPreference = async (req, res) => {
   try {
-    const { name, lastname, DNI, email, numberCell, provinceOrigin, locationOrigin } = req.body
+    const {
+      name,
+      lastname,
+      dateBirth,
+      DNI,
+      numberCell,
+      provinceOrigin,
+      locationOrigin,
+      email,
+      nameCar,
+      registrationCar,
+      colorCar,
+      styleCar,
+      yearCar,
+      versionCar,
+      VTV,
+      travelPeople,
+      arrivalDate,
+      dateToProvince
+    } = req.body
     let findInscription = await Inscription.findOne({ DNI })
     if (!findInscription) {
-      const inscription = await Inscription.create({ name, lastname, DNI, email, numberCell, provinceOrigin, locationOrigin })
+      const inscription = await Inscription.create({
+        name,
+        lastname,
+        dateBirth,
+        DNI,
+        numberCell,
+        provinceOrigin,
+        locationOrigin,
+        email,
+        nameCar,
+        registrationCar,
+        colorCar,
+        styleCar,
+        yearCar,
+        versionCar,
+        VTV,
+        travelPeople,
+        arrivalDate,
+        dateToProvince
+      })
       const savedIncription = await inscription.save()
     }
     findInscription = await Inscription.findOne({ DNI })
@@ -40,7 +78,7 @@ const createPreference = async (req, res) => {
         unit_price,
         quantity: 1,
         currency_id: 'ARS',
-        description: `Inscripción para el encuentro de autos cuyo DNI: ${DNI}`
+        description: `Inscripción para el encuentro de Citroen del DNI: ${DNI}`
       }],
       payer: {
         name: name,

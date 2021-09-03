@@ -21,6 +21,10 @@ const inscriptionSchema = new Schema({
     trim: true,
     unique: true
   },
+  dateBirth: {
+    type: Date,
+    required: [true, 'La fecha de nacimiento es obligatorio']
+  },
   email: {
     type: String,
     lowercase: true,
@@ -44,6 +48,51 @@ const inscriptionSchema = new Schema({
     trim: true,
     required: [true, 'La localidad de origen es obligatorio'],
     uppercase: true
+  },
+  nameCar: {
+    type: String,
+    trim: true,
+    uppercase: true
+  },
+  registrationCar: {
+    type: String,
+    required: [true, 'La patente del Automóvil es obligatoria.']
+  },
+  colorCar: {
+    type: String,
+    required: [true, 'El color del auto es obligatorio'],
+    trim: true,
+    uppercase: true
+  },
+  yearCar: {
+    type: Number,
+    required: [true, 'El año de fabricación del auto es obligatorio']
+  },
+  versionCar: {
+    type: String,
+    required: [true, 'La versión o modelo del auto es obligatorio'],
+    trim: true,
+    uppercase: true
+  },
+  styleCar: {
+    type: String,
+    required: [true, 'El estilo del auto es obligatorio'],
+    trim: true,
+    uppercase: true
+  },
+  VTV: {
+    type: Boolean,
+    default: false
+  },
+  travelPeople: {
+    type: Number,
+    default: 1
+  },
+  arrivalDate: {
+    type: Date
+  },
+  dateToProvince: {
+    type: Date
   },
   orders: [{
     type: ObjectId,
