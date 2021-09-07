@@ -31,9 +31,31 @@ const createPreference = async (req, res) => {
       arrivalDate,
       dateToProvince
     } = req.body
-    let findInscription = await Inscription.findOne({ DNI })
-    if (!findInscription) {
-      const inscription = await Inscription.create({
+    const findInscriptionNew = await Inscription.findOne({ DNI })
+    if (findInscriptionNew) {
+      const updateInscription = await Inscription.findOneAndUpdate({ DNI: DNI },
+        {
+          name,
+          lastname,
+          dateBirth: new Date(dateBirth),
+          numberCell,
+          provinceOrigin,
+          locationOrigin,
+          email,
+          nameCar,
+          registrationCar,
+          colorCar,
+          styleCar,
+          yearCar,
+          versionCar,
+          VTV,
+          travelPeople,
+          arrivalDate: new Date(arrivalDate),
+          dateToProvince: new Date(dateToProvince)
+        }, { new: true })
+      console.log('updateInscription', updateInscription)
+    } else {
+      const inscriptionCreate = await Inscription.create({
         name,
         lastname,
         dateBirth,
@@ -53,9 +75,10 @@ const createPreference = async (req, res) => {
         arrivalDate,
         dateToProvince
       })
-      const savedIncription = await inscription.save()
+      const savedIncription = await inscriptionCreate.save()
+      console.log('SavedInscription', savedIncription)
     }
-    findInscription = await Inscription.findOne({ DNI })
+    const findInscription = await Inscription.findOne({ DNI })
     const createOrder = await OrderMP.create({
       title: `DNI: ${DNI}`,
       unit_price,
@@ -92,6 +115,7 @@ const createPreference = async (req, res) => {
       expires: true,
       date_of_expiration: '2021-11-20T00:00:00.000-04:00'
     })
+    console.log(preference)
     res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
     res.status(500).json({ error: err.message })
