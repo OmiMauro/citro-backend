@@ -33,7 +33,8 @@ const createPreference = async (req, res) => {
     } = req.body
     const findInscriptionNew = await Inscription.findOne({ DNI })
     if (findInscriptionNew) {
-      const updateInscription = await Inscription.findOneAndUpdate({ DNI: DNI },
+      const updateInscription = await Inscription.findOneAndUpdate(
+        { DNI: DNI },
         {
           name,
           lastname,
@@ -52,8 +53,9 @@ const createPreference = async (req, res) => {
           travelPeople,
           arrivalDate: new Date(arrivalDate),
           dateToProvince: new Date(dateToProvince)
-        }, { new: true })
-      console.log('updateInscription', updateInscription)
+        },
+        { new: true }
+      )
     } else {
       const inscriptionCreate = await Inscription.create({
         name,
@@ -76,7 +78,6 @@ const createPreference = async (req, res) => {
         dateToProvince
       })
       const savedIncription = await inscriptionCreate.save()
-      console.log('SavedInscription', savedIncription)
     }
     const findInscription = await Inscription.findOne({ DNI })
     const createOrder = await OrderMP.create({
@@ -96,13 +97,15 @@ const createPreference = async (req, res) => {
         pending: `${process.env.NAME_APPLICATION}/pending`,
         failure: `${process.env.NAME_APPLICATION}/rejected`
       },
-      items: [{
-        title: `DNI: ${DNI}`,
-        unit_price,
-        quantity: 1,
-        currency_id: 'ARS',
-        description: `Inscripción para el encuentro de Citroen del DNI: ${DNI}`
-      }],
+      items: [
+        {
+          title: `DNI: ${DNI}`,
+          unit_price,
+          quantity: 1,
+          currency_id: 'ARS',
+          description: `Inscripción para el encuentro de Citroen del DNI: ${DNI}`
+        }
+      ],
       payer: {
         name: name,
         surname: lastname,
@@ -115,7 +118,6 @@ const createPreference = async (req, res) => {
       expires: true,
       date_of_expiration: '2021-11-20T00:00:00.000-04:00'
     })
-    console.log(preference)
     res.status(200).json({ init_point: preference.body.init_point })
   } catch (err) {
     res.status(500).json({ error: err.message })
@@ -136,7 +138,7 @@ const webhook = async (req, res) => {
   }
 }
 
-const findPayMP = async (id) => {
+const findPayMP = async id => {
   const response = await axios({
     method: 'GET',
     url: `https://api.mercadopago.com/v1/payments/${id}?access_token=${process.env.ACCESS_TOKEN_MP}`
@@ -144,12 +146,27 @@ const findPayMP = async (id) => {
   return response
 }
 
-const updateOrderDB = async (findPay) => {
-  const { id, date_created, date_last_updated, date_approved, status, status_detail, external_reference, transaction_amount_refunded, operation_type, payment_type_id } = findPay.data
-  const { net_received_amount, total_paid_amount } = findPay.data.transaction_details
+const updateOrderDB = async findPay => {
+  const {
+    id,
+    date_created,
+    date_last_updated,
+    date_approved,
+    status,
+    status_detail,
+    external_reference,
+    transaction_amount_refunded,
+    operation_type,
+    payment_type_id
+  } = findPay.data
+  const {
+    net_received_amount,
+    total_paid_amount
+  } = findPay.data.transaction_details
   const objectId = mongoose.Types.ObjectId(external_reference)
-  const netoRecivido = (net_received_amount - transaction_amount_refunded)
-  const findOrderAndUpdate = await OrderMP.findByIdAndUpdate({ _id: objectId },
+  const netoRecivido = net_received_amount - transaction_amount_refunded
+  const findOrderAndUpdate = await OrderMP.findByIdAndUpdate(
+    { _id: objectId },
     {
       id_Operacion: id,
       date_created,
@@ -162,7 +179,8 @@ const updateOrderDB = async (findPay) => {
       operation_type,
       payment_type_id,
       transaction_amount_refunded
-    })
+    }
+  )
 }
 export { createPreference, webhook }
 
