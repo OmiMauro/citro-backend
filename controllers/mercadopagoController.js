@@ -183,23 +183,3 @@ const updateOrderDB = async findPay => {
   )
 }
 export { createPreference, webhook }
-
-/*
-if (req.params.type === 'payment') {
-      const paymentID = req.params.data.id
-      // obtener sobre el pago en MercadoPago
-      const payment = await mercadopago.payments.get(paymentID)
-      if (payment) {
-        // obtener el reference que especificamos en la orden del pago en MP
-        const orderId = await payment.external_reference
-        // buscar la orden en la DB
-        const findOrder = await OrderMP.find({ _id: orderId })
-        if (findOrder.unit_price === payment.transaction_amount) {
-          findOrder.status = payment.status
-          if (findOrder.status === 'approved') {
-            await OrderMP.findByIdAndUpdate(findOrder._id, findOrder)
-            return res.json({ msg: 'pago realizado' })
-          }
-        }
-      }
-    } */
