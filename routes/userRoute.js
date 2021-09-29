@@ -1,6 +1,10 @@
 import express from 'express'
 
-import { requireSignin, isAdmin, isAuth } from '../controllers/authController.js'
+import {
+  requireSignin,
+  isAdmin,
+  isAuth
+} from '../controllers/authController.js'
 import { userById, read, update } from '../controllers/userController.js'
 
 const Router = express.Router()

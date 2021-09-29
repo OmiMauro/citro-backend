@@ -29,34 +29,18 @@ const createPreference = async (req, res) => {
       VTV,
       travelPeople,
       arrivalDate,
-      dateToProvince
+      dateToProvince,
+      paymentWithMP
     } = req.body
-    const findInscriptionNew = await Inscription.findOne({ DNI })
+    const findInscriptionNew = await await Inscription.findOne({ DNI })
+    // si encuentra una inscripcion con el DNI ingresado
     if (findInscriptionNew) {
-      const updateInscription = await Inscription.findOneAndUpdate(
-        { DNI: DNI },
-        {
-          name,
-          lastname,
-          dateBirth: new Date(dateBirth),
-          numberCell,
-          provinceOrigin,
-          locationOrigin,
-          email,
-          nameCar,
-          registrationCar,
-          colorCar,
-          styleCar,
-          yearCar,
-          versionCar,
-          VTV,
-          travelPeople,
-          arrivalDate: new Date(arrivalDate),
-          dateToProvince: new Date(dateToProvince)
-        },
-        { new: true }
-      )
+      return res.status(200).json({
+        inscription: true,
+        message: '¡El DNI ingresado ya se inscribió. Te esperamos!'
+      })
     } else {
+      // cuando el usuario no se inscribió
       const inscriptionCreate = await Inscription.create({
         name,
         lastname,
@@ -78,47 +62,67 @@ const createPreference = async (req, res) => {
         dateToProvince
       })
       const savedIncription = await inscriptionCreate.save()
-    }
-    const findInscription = await Inscription.findOne({ DNI })
-    const createOrder = await OrderMP.create({
-      title: `DNI: ${DNI}`,
-      unit_price,
-      inscription: findInscription._id
-    })
-    const orderSaved = await createOrder.save()
-    findInscription.orders.push(orderSaved._id)
-    await findInscription.save()
-    const preference = await mercadopago.preferences.create({
-      external_reference: orderSaved._id.toString(),
-      statement_descriptor,
-      notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook?source_news=webhooks`,
-      back_urls: {
-        success: `${process.env.NAME_APPLICATION}/success`,
-        pending: `${process.env.NAME_APPLICATION}/pending`,
-        failure: `${process.env.NAME_APPLICATION}/rejected`
-      },
-      items: [
-        {
+      // Si el usuario va a pagar en efectivo el día del evento
+      if (!paymentWithMP) {
+        const createOrder = await OrderMP.create({
           title: `DNI: ${DNI}`,
           unit_price,
-          quantity: 1,
-          currency_id: 'ARS',
-          description: `Inscripción para el encuentro de Citroen del DNI: ${DNI}`
-        }
-      ],
-      payer: {
-        name: name,
-        surname: lastname,
-        email: email,
-        identification: {
-          type: 'DNI',
-          number: DNI
-        }
-      },
-      expires: true,
-      date_of_expiration: '2021-11-20T00:00:00.000-04:00'
-    })
-    res.status(200).json({ init_point: preference.body.init_point })
+          inscription: savedIncription._id,
+          status: 'pending',
+          status_detail: 'efectivo'
+        })
+        const orderSaved = await createOrder.save()
+        savedIncription.orders = orderSaved._id
+        await savedIncription.save()
+        return res.status(201).json({
+          message: 'La inscripción se registró con éxito. ¡Te esperamos!'
+        })
+      } else {
+        // Método de pago con MercadoPago
+        const createOrder = await OrderMP.create({
+          title: `DNI: ${DNI}`,
+          unit_price,
+          inscription: savedIncription._id
+        })
+        const orderSaved = await createOrder.save()
+
+        const preference = await mercadopago.preferences.create({
+          external_reference: orderSaved._id.toString(),
+          statement_descriptor,
+          notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook?source_news=webhooks`,
+          back_urls: {
+            success: `${process.env.NAME_APPLICATION}/success`,
+            pending: `${process.env.NAME_APPLICATION}/pending`,
+            failure: `${process.env.NAME_APPLICATION}/rejected`
+          },
+          items: [
+            {
+              title: `DNI: ${DNI}`,
+              unit_price,
+              quantity: 1,
+              currency_id: 'ARS',
+              description: `Inscripción para el encuentro de Citroen del DNI: ${DNI}`
+            }
+          ],
+          payer: {
+            name: name,
+            surname: lastname,
+            email: email,
+            identification: {
+              type: 'DNI',
+              number: DNI
+            }
+          },
+          expires: true,
+          date_of_expiration: '2021-11-20T00:00:00.000-04:00'
+        })
+        savedIncription.orders = orderSaved._id
+        await savedIncription.save()
+        orderSaved.init_point = preference.body.init_point
+        await orderSaved.save()
+        res.status(200).json({ init_point: preference.body.init_point })
+      }
+    }
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

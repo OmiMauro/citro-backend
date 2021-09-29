@@ -95,9 +95,8 @@ const addInscription = async (req, res) => {
 }
 
 const getInscripcionByDNI = async (req, res) => {
+  const { email, DNI } = req.body
   try {
-    const { email, DNI } = req.body
-
     const findInscription = await Inscription.findOne(
       { DNI },
       {
@@ -110,10 +109,12 @@ const getInscripcionByDNI = async (req, res) => {
       }
     ).populate('orders', {
       status: 1,
+      init_point: 1,
+      status_detail: 1,
       _id: 0
     })
     if (findInscription && findInscription.email === email) {
-      return res.status(201).json({ findInscription })
+      return res.status(201).json({ inscription: findInscription })
     }
     return res.status(404).json({
       message:
@@ -154,7 +155,7 @@ const listInscriptions = async (req, res) => {
 const inscriptionsApproved = async (req, res) => {
   try {
     const response = await Order.find(
-      { status: 'approved' },
+      { $or: [{ status: 'approved' }, { status_detail: 'efectivo' }] },
       {
         status: 1,
         status_detail: 1,

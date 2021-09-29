@@ -3,13 +3,25 @@ POST http://localhost:9000/api/mercadopago/create_preference HTTP/1.1
 Content-Type: application/json
 
 {
-  "name":"Mauro Cristian Emanuel",
-  "lastname":"Omiñuka",
-  "email":"ominuka.mauro@gmail.com",
-  "DNI":"40123188",
+  "name":"Jorge",
+  "lastname":"ABCS",
+  "email":"jorge@gmail.com",
+  "DNI":"400000011",
   "numberCell":"+543743519395",
   "provinceOrigin":"Misiones",
-  "locationOrigin":"Jardín América"
+  "locationOrigin":"Jardín América",
+  "dateBirth":"1990-12-11",
+    "nameCar": "El tigre",
+    "registrationCar":"abs-112",
+    "colorCar":"Verde",
+    "yearCar": 1999,
+    "versionCar":"Personalizado",
+    "styleCar":"AMI8",
+    "VTV":true,
+    "arrivalDate":"2021-12-11",
+    "dateToProvince":"2021-11-19",
+    "travelPeople":2,
+    "paymentWithMP": false
 }
 ###
 POST http://localhost:9000/api/mercadopago/webhook?data.id=16351010199&source_news=webhooks&type=payment HTTP/1.1

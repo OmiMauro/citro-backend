@@ -2,105 +2,108 @@ import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 const Schema = mongoose.Schema
 const { ObjectId } = mongoose.Schema
-const inscriptionSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'El nombre es obligatorio'],
-    trim: true,
-    uppercase: true
+const inscriptionSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'El nombre es obligatorio'],
+      trim: true,
+      uppercase: true
+    },
+    lastname: {
+      type: String,
+      required: [true, 'El apellido es obligatorio'],
+      trim: true,
+      uppercase: true
+    },
+    DNI: {
+      type: Number,
+      required: [true, 'El DNI es obligatorio'],
+      trim: true,
+      unique: true
+    },
+    dateBirth: {
+      type: Date,
+      required: [true, 'La fecha de nacimiento es obligatorio']
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      required: [true, 'El email es obligatorio']
+      /* match: [/\S+@\S+\.\S+/] */
+    },
+    numberCell: {
+      type: String,
+      trim: true
+    },
+    provinceOrigin: {
+      type: String,
+      trim: true,
+      required: [true, 'La provincia de origen es obligatorio. '],
+      uppercase: true
+    },
+    locationOrigin: {
+      type: String,
+      default: 'Otro',
+      trim: true,
+      required: [true, 'La localidad de origen es obligatorio'],
+      uppercase: true
+    },
+    nameCar: {
+      type: String,
+      trim: true,
+      uppercase: true
+    },
+    registrationCar: {
+      type: String,
+      required: [true, 'La patente del Automóvil es obligatoria.']
+    },
+    colorCar: {
+      type: String,
+      required: [true, 'El color del auto es obligatorio'],
+      trim: true,
+      uppercase: true
+    },
+    yearCar: {
+      type: Number,
+      required: [true, 'El año de fabricación del auto es obligatorio']
+    },
+    versionCar: {
+      type: String,
+      required: [true, 'La versión o modelo del auto es obligatorio'],
+      trim: true,
+      uppercase: true
+    },
+    styleCar: {
+      type: String,
+      required: [true, 'El estilo del auto es obligatorio'],
+      trim: true,
+      uppercase: true
+    },
+    VTV: {
+      type: Boolean,
+      default: false
+    },
+    travelPeople: {
+      type: Number,
+      default: 1
+    },
+    arrivalDate: {
+      type: Date
+    },
+    dateToProvince: {
+      type: Date
+    },
+    orders: {
+      type: ObjectId,
+      ref: 'Order'
+    }
   },
-  lastname: {
-    type: String,
-    required: [true, 'El apellido es obligatorio'],
-    trim: true,
-    uppercase: true
-  },
-  DNI: {
-    type: Number,
-    required: [true, 'El DNI es obligatorio'],
-    trim: true,
-    unique: true
-  },
-  dateBirth: {
-    type: Date,
-    required: [true, 'La fecha de nacimiento es obligatorio']
-  },
-  email: {
-    type: String,
-    lowercase: true,
-    trim: true,
-    required: [true, 'El email es obligatorio']
-    /* match: [/\S+@\S+\.\S+/] */
-  },
-  numberCell: {
-    type: String,
-    trim: true
-  },
-  provinceOrigin: {
-    type: String,
-    trim: true,
-    required: [true, 'La provincia de origen es obligatorio. '],
-    uppercase: true
-  },
-  locationOrigin: {
-    type: String,
-    default: 'Otro',
-    trim: true,
-    required: [true, 'La localidad de origen es obligatorio'],
-    uppercase: true
-  },
-  nameCar: {
-    type: String,
-    trim: true,
-    uppercase: true
-  },
-  registrationCar: {
-    type: String,
-    required: [true, 'La patente del Automóvil es obligatoria.']
-  },
-  colorCar: {
-    type: String,
-    required: [true, 'El color del auto es obligatorio'],
-    trim: true,
-    uppercase: true
-  },
-  yearCar: {
-    type: Number,
-    required: [true, 'El año de fabricación del auto es obligatorio']
-  },
-  versionCar: {
-    type: String,
-    required: [true, 'La versión o modelo del auto es obligatorio'],
-    trim: true,
-    uppercase: true
-  },
-  styleCar: {
-    type: String,
-    required: [true, 'El estilo del auto es obligatorio'],
-    trim: true,
-    uppercase: true
-  },
-  VTV: {
-    type: Boolean,
-    default: false
-  },
-  travelPeople: {
-    type: Number,
-    default: 1
-  },
-  arrivalDate: {
-    type: Date
-  },
-  dateToProvince: {
-    type: Date
-  },
-  orders: [{
-    type: ObjectId,
-    ref: 'Order'
-  }]
-}, {
-  timestamps: true
-})
+  {
+    timestamps: true
+  }
+)
 
 inscriptionSchema.plugin(uniqueValidator)
 const Inscription = mongoose.model('Inscription', inscriptionSchema)
