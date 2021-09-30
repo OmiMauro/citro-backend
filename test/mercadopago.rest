@@ -4,9 +4,9 @@ Content-Type: application/json
 
 {
   "name":"Jorge",
-  "lastname":"ABCS",
+  "lastname":"Rodriguez",
   "email":"jorge@gmail.com",
-  "DNI":"400000011",
+  "DNI":"12314",
   "numberCell":"+543743519395",
   "provinceOrigin":"Misiones",
   "locationOrigin":"Jardín América",
@@ -21,7 +21,7 @@ Content-Type: application/json
     "arrivalDate":"2021-12-11",
     "dateToProvince":"2021-11-19",
     "travelPeople":2,
-    "paymentWithMP": false
+    "paymentWithMP": "true"
 }
 ###
 POST http://localhost:9000/api/mercadopago/webhook?data.id=16351010199&source_news=webhooks&type=payment HTTP/1.1

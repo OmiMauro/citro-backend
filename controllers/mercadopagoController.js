@@ -32,11 +32,12 @@ const createPreference = async (req, res) => {
       dateToProvince,
       paymentWithMP
     } = req.body
+    console.log(JSON.parse(paymentWithMP), paymentWithMP)
     const findInscriptionNew = await await Inscription.findOne({ DNI })
     // si encuentra una inscripcion con el DNI ingresado
     if (findInscriptionNew) {
-      return res.status(200).json({
-        inscription: true,
+      return res.status(202).json({
+        inscription: 'exists',
         message: '¡El DNI ingresado ya se inscribió. Te esperamos!'
       })
     } else {
@@ -62,10 +63,11 @@ const createPreference = async (req, res) => {
         dateToProvince
       })
       const savedIncription = await inscriptionCreate.save()
-      // Si el usuario va a pagar en efectivo el día del evento
-      if (!paymentWithMP) {
+      console.log(savedIncription)
+      if (!JSON.parse(paymentWithMP)) {
+        // Si el usuario va a pagar en efectivo el día del evento
         const createOrder = await OrderMP.create({
-          title: `DNI: ${DNI}`,
+          title: `CitroRodando: ${DNI}`,
           unit_price,
           inscription: savedIncription._id,
           status: 'pending',
@@ -75,12 +77,13 @@ const createPreference = async (req, res) => {
         savedIncription.orders = orderSaved._id
         await savedIncription.save()
         return res.status(201).json({
+          inscription: 'efectivo',
           message: 'La inscripción se registró con éxito. ¡Te esperamos!'
         })
       } else {
         // Método de pago con MercadoPago
         const createOrder = await OrderMP.create({
-          title: `DNI: ${DNI}`,
+          title: `CitroRodando: ${DNI}`,
           unit_price,
           inscription: savedIncription._id
         })
@@ -97,11 +100,11 @@ const createPreference = async (req, res) => {
           },
           items: [
             {
-              title: `DNI: ${DNI}`,
+              title: `${process.env.title}: ${DNI}`,
               unit_price,
               quantity: 1,
               currency_id: 'ARS',
-              description: `Inscripción para el encuentro de Citroen del DNI: ${DNI}`
+              description: `Inscripción para el encuentro de Citrorodando del DNI: ${DNI}`
             }
           ],
           payer: {
@@ -114,13 +117,13 @@ const createPreference = async (req, res) => {
             }
           },
           expires: true,
-          date_of_expiration: '2021-11-20T00:00:00.000-04:00'
+          date_of_expiration: `${process.env.date_expiration_payment}`
         })
         savedIncription.orders = orderSaved._id
         await savedIncription.save()
         orderSaved.init_point = preference.body.init_point
         await orderSaved.save()
-        res.status(200).json({ init_point: preference.body.init_point })
+        res.status(201).json({ init_point: preference.body.init_point })
       }
     }
   } catch (err) {

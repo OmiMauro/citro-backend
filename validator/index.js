@@ -77,6 +77,7 @@ const inscriptionValidator = (req, res, next) => {
       'Debe especificar si pagará en efectivo o con MercadoPago'
     )
     .notEmpty()
+    .isBoolean()
 
   const errors = req.validationErrors()
   if (errors) {
