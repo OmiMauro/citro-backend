@@ -18,12 +18,14 @@ import mercadopagoRoutes from './routes/mercadopagoRoutes.js'
 const App = express()
 
 // db
-mongoose.connect(process.env.DATABASE, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-}).then(() => console.log('DB Connected'))
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+  })
+  .then(() => console.log('DB Connected'))
 
 // middleware
 App.use(morgan('dev'))

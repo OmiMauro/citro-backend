@@ -3,7 +3,6 @@ import Inscription from '../models/inscription.js'
 import OrderMP from '../models/orders.js'
 import axios from 'axios'
 import mongoose from 'mongoose'
-const unit_price = parseInt(process.env.price)
 const statement_descriptor = process.env.STATEMENT_DESCRIPTOR
 mercadopago.configure({
   access_token: `${process.env.ACCESS_TOKEN_MP}`
@@ -28,11 +27,8 @@ const createPreference = async (req, res) => {
       versionCar,
       VTV,
       travelPeople,
-      arrivalDate,
-      dateToProvince,
       paymentWithMP
     } = req.body
-    console.log(JSON.parse(paymentWithMP), paymentWithMP)
     const findInscriptionNew = await await Inscription.findOne({ DNI })
     // si encuentra una inscripcion con el DNI ingresado
     if (findInscriptionNew) {
@@ -58,12 +54,13 @@ const createPreference = async (req, res) => {
         yearCar,
         versionCar,
         VTV,
-        travelPeople,
-        arrivalDate,
-        dateToProvince
+        travelPeople
       })
       const savedIncription = await inscriptionCreate.save()
-      console.log(savedIncription)
+      const quantity = travelPeople === 0 ? 1 : parseInt(travelPeople) + 1
+      const unit_price = parseInt(process.env.price) * quantity
+      console.log('travelPeople', travelPeople, 'qt:', quantity, unit_price)
+
       if (!JSON.parse(paymentWithMP)) {
         // Si el usuario va a pagar en efectivo el día del evento
         const createOrder = await OrderMP.create({
@@ -88,7 +85,6 @@ const createPreference = async (req, res) => {
           inscription: savedIncription._id
         })
         const orderSaved = await createOrder.save()
-
         const preference = await mercadopago.preferences.create({
           external_reference: orderSaved._id.toString(),
           statement_descriptor,
@@ -104,7 +100,7 @@ const createPreference = async (req, res) => {
               unit_price,
               quantity: 1,
               currency_id: 'ARS',
-              description: `Inscripción para el encuentro de Citrorodando del DNI: ${DNI}`
+              description: `Inscripción para el encuentro CitroRodando del DNI: ${DNI}`
             }
           ],
           payer: {

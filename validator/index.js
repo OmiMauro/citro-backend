@@ -29,7 +29,6 @@ const inscriptionValidator = (req, res, next) => {
   req.check('lastname', 'El apellido es obligatorio').notEmpty()
   req.check('DNI', 'El DNI es obligatorio').notEmpty()
   req.check('dateBirth', 'La Fecha de Nacimiento es obligatorio').notEmpty()
-
   req
     .check('email', 'El email deberia ser entre 4 y 32 caracteres')
     .matches(/.+\@.+\..+/)
@@ -59,18 +58,8 @@ const inscriptionValidator = (req, res, next) => {
       'Debe especificar cuántas personas viajan en su auto'
     )
     .notEmpty()
-  req
-    .check(
-      'arrivalDate',
-      'Debe especificar la fecha aprox que llegará a Misiones'
-    )
-    .notEmpty()
-  req
-    .check(
-      'dateToProvince',
-      'Debe especificar la fecha que regresará a su provincia'
-    )
-    .notEmpty()
+    .isInt()
+
   req
     .check(
       'paymentWithMP',
