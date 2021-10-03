@@ -103,7 +103,7 @@ const getInscripcionByDNI = async (req, res) => {
         name: 1,
         lastname: 1,
         DNI: 1,
-        email,
+        email: 1,
         orders: 1,
         _id: 0
       }
@@ -113,6 +113,7 @@ const getInscripcionByDNI = async (req, res) => {
       status_detail: 1,
       _id: 0
     })
+
     if (findInscription && findInscription.email === email) {
       return res.status(201).json({ inscription: findInscription })
     }
