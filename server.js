@@ -14,7 +14,7 @@ import authRoutes from './routes/authRoute.js'
 import userRoutes from './routes/userRoute.js'
 import inscriptionRoutes from './routes/inscriptionRoute.js'
 import mercadopagoRoutes from './routes/mercadopagoRoutes.js'
-
+import imageRouter from './routes/imagesRoute.js'
 const App = express()
 
 // db
@@ -39,6 +39,7 @@ App.use('/api', authRoutes)
 App.use('/api', userRoutes)
 App.use('/api', inscriptionRoutes)
 App.use('/api', mercadopagoRoutes)
+App.use('/api', imageRouter)
 
 App.use(express.static(process.cwd() + '/build'))
 App.get('*', function (request, response) {

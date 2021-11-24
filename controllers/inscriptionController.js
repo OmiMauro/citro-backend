@@ -27,7 +27,6 @@ const addInscription = async (req, res) => {
 
   try {
     const findInscription = await Inscription.findOne({ DNI })
-    console.log(findInscription)
     if (findInscription) {
       const updateInscription = await Inscription.findOneAndUpdate(
         { DNI: DNI },

@@ -54,3 +54,5 @@ Content-Type: application/json
     "VTV":true,
     "travelPeople":2
 }
+###
+DELETE  http://localhost:9000/api/images HTTP/1.1
