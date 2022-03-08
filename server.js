@@ -6,7 +6,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import createError from 'http-errors'
 
-import indexRouter from './routes/index.js'
+import { indexRouter } from './routes/index.js'
 
 const app = express()
 app.use(cors())
