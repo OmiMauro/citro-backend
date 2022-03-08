@@ -16,4 +16,5 @@ const remove = async id => {
   return await membersRepository.remove(id)
 }
 
-export { getById, update, create, getAll, remove }
+const membersService = { getById, update, create, getAll, remove }
+export default membersService

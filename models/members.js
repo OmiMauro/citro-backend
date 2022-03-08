@@ -13,7 +13,6 @@ const membersSchema = new Schema({
     required: [true, 'El apellido de la organizacion es obligatorio'],
     trim: true
   },
-  },
   image: {
     type: String,
     trim: true
@@ -22,12 +21,10 @@ const membersSchema = new Schema({
     type: String,
     trim: true
   },
-
   aboutUs: {
     type: String,
     trim: true
   },
-
   email: {
     type: String,
     required: [true, 'El email es obligatorio']
@@ -40,7 +37,6 @@ const membersSchema = new Schema({
   },
   urlWhatsapp: {
     type: String
-
   }
 },
 {
