@@ -1,4 +1,4 @@
-import { Organization } from '../models/organization'
+import { Organization } from '../models/organization.js'
 
 const getById = async (id) => {
   return await Organization.findById(id)
@@ -13,4 +13,6 @@ const getAll = async () => {
   return await Organization.find({})
 }
 
-export { getById, update, create, getAll }
+const organizationRepository = { getById, update, create, getAll }
+
+export default organizationRepository

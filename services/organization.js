@@ -13,4 +13,5 @@ const getAll = async () => {
   return await organizationRepository.getAll()
 }
 
-export { getById, update, create, getAll }
+const organizationServices = { getById, update, create, getAll }
+export default organizationServices
