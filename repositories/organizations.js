@@ -1,16 +1,16 @@
-import { Organization } from '../models/organization.js'
+import { Organizations } from '../models/organization.js'
 
 const getById = async (id) => {
-  return await Organization.findById(id)
+  return await Organizations.findById(id)
 }
 const update = async (id, organization) => {
-  return await Organization.findByIdAndUpdate(id, organization)
+  return await Organizations.findByIdAndUpdate(id, organization)
 }
 const create = async (organization) => {
-  return await Organization.create(organization)
+  return await Organizations.create(organization)
 }
 const getAll = async () => {
-  return await Organization.find({})
+  return await Organizations.find({})
 }
 
 const organizationRepository = { getById, update, create, getAll }

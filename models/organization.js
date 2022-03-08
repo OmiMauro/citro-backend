@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
-const Schema = mongoose.Schema
 
-const organizationSchema = new Schema({
-
+const organizationSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'El nombre de la organizacion es obligatorio'],
@@ -40,6 +38,6 @@ const organizationSchema = new Schema({
 
 })
 
-const Organization = mongoose.model('Organization', organizationSchema)
+const Organizations = mongoose.model('Organizations', organizationSchema)
 
-export { Organization }
+export { Organizations }

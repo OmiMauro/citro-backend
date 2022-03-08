@@ -13,6 +13,7 @@ const membersSchema = new Schema({
     required: [true, 'El apellido de la organizacion es obligatorio'],
     trim: true
   },
+  },
   image: {
     type: String,
     trim: true
