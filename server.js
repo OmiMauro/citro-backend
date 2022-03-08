@@ -1,30 +1,20 @@
 import express from 'express'
-import mongoose from 'mongoose'
 import logger from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import 'dotenv/config'
 import createError from 'http-errors'
-
+import connectDB from './models/index.js'
 import { indexRouter } from './routes/index.js'
 
 const app = express()
 app.use(cors())
 
-// db
-/* mongoose
-  .connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-  })
-  .then(() => console.log('DB Connected'))
- */
 // middleware
 app.use(express.json())
 app.use(cookieParser())
 app.use(logger('dev'))
+connectDB()
 app.use('/api', indexRouter)
 
 // catch 404 and forward to error handler
