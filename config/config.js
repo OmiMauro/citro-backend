@@ -7,7 +7,9 @@ export default {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT
+    port: process.env.DB_PORT,
+    uriDB: process.env.URI_DB
+
   },
   test: {
     username: process.env.DB_USER,
