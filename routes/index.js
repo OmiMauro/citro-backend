@@ -1,6 +1,6 @@
 import Express from 'express'
 
-import activities from './activities'
+import activities from './activities.js'
 import cars from './cars.js'
 import galery from './galery.js'
 import inscriptions from './inscriptions.js'
