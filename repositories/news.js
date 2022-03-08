@@ -3,11 +3,11 @@ import { News } from '../models/news.js'
 const getById = async (id) => {
   return await News.findById(id)
 }
-const update = async (id, new) => {
-  return await News.findByIdAndUpdate(id, new)
+const update = async (id, news) => {
+  return await News.findByIdAndUpdate(id, news)
 }
-const create = async (new) => {
-  return await News.create(new)
+const create = async (news) => {
+  return await News.create(news)
 }
 const getAll = async () => {
   return await News.find({})
@@ -15,6 +15,6 @@ const getAll = async () => {
 const remove = async (id) => {
   return await News.findByIdAndRemove(id)
 }
-const newsRepository ={ getById, update, create, getAll, remove }
+const newsRepository = { getById, update, create, getAll, remove }
 
 export default newsRepository

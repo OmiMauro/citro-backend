@@ -24,6 +24,6 @@ const inscriptionsSchema = new Schema({
   timestamps: true
 })
 
-const Inscription = mongoose.model('Inscriptions', inscriptionsSchema)
+const Inscriptions = mongoose.model('Inscriptions', inscriptionsSchema)
 
-export { Inscription }
+export { Inscriptions }
