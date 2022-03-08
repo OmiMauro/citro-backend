@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const slidesSchema = new Schema({
   image: {
     type: String,
-    required: [true, 'La imagen del slide es obligatorio'],
+    required: [true, 'La url del slide es obligatorio'],
     trim: true
   },
   text: {
@@ -13,10 +13,8 @@ const slidesSchema = new Schema({
   },
   order: {
     type: Number
-  },
-  organizationId: {
-    type: mongoose.Schema.Types.ObjectId
   }
+
 }, { timestamps: true })
 
 const Slides = mongoose.model('Slides', slidesSchema)

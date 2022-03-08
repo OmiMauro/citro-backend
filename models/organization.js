@@ -3,12 +3,11 @@ import mongoose from 'mongoose'
 const organizationSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'El nombre de la organizacion es obligatorio'],
+    required: [true, 'El nombre de la organización es obligatorio'],
     trim: true
   },
   image: {
-    type: String,
-    trim: true
+    type: String
   },
   phone: {
     type: String,
@@ -26,8 +25,7 @@ const organizationSchema = new mongoose.Schema({
     type: String
   },
   email: {
-    type: String,
-    required: [true, 'El email es obligatorio']
+    type: String
   },
   urlFacebook: {
     type: String

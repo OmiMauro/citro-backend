@@ -3,8 +3,7 @@ const Schema = mongoose.Schema
 
 const galerySchema = new Schema({
   image: { type: String },
-  filename: { type: String },
-  user: { type: mongoose.Schema.Types.ObjectId }
+  filename: { type: String }
 })
 
 const Galery = mongoose.model('Galery', galerySchema)
