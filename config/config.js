@@ -25,7 +25,7 @@ export default {
   },
   token: {
     secret: process.env.JWT_PASS,
-    expiresIn: '1d'
+    expiresIn: process.env.JWT_EXPIRES_IN
   },
   sendGrid: {
     apiKey: process.env.SENDGRID_API_KEY,
