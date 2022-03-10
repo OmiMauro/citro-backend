@@ -1,7 +1,7 @@
 import 'dotenv/config'
 export default {
   organizationId: 1,
-  adminRoleName: 'Admin',
+  adminRoleName: 'admin',
   development: {
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,

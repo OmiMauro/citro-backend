@@ -7,7 +7,6 @@ import inscriptions from './inscriptions.js'
 import members from './members.js'
 import news from './news.js'
 import organizations from './organization.js'
-import roles from './roles.js'
 import slides from './slides.js'
 import users from './users.js'
 
@@ -20,7 +19,6 @@ indexRouter.use('/inscriptions', inscriptions)
 indexRouter.use('/members', members)
 indexRouter.use('/news', news)
 indexRouter.use('/organizations', organizations)
-indexRouter.use('/roles', roles)
 indexRouter.use('/slides', slides)
 
 indexRouter.use('/users', users)
