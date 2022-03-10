@@ -1,6 +1,9 @@
 import mongoose from 'mongoose'
 
 const organizationSchema = new mongoose.Schema({
+  _id: {
+    type: Number
+  },
   name: {
     type: String,
     required: [true, 'El nombre de la organización es obligatorio'],
