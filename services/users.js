@@ -1,20 +1,31 @@
 import usersRepository from '../repositories/users.js'
 
 const getById = async (id) => {
-  return await usersRepository.getById(id)
+  const user = await usersRepository.getById(id)
+  if (!user) {
+    const error = new Error('No se pudo encontrar el usuario')
+    error.status = 404
+    throw error
+  }
+  return user
 }
-const update = async (id, user) => {
-  return await usersRepository.update(id, user)
+const update = async (id, body) => {
+
 }
-const create = async (user) => {
-  return await usersRepository.create(user)
-}
-const getAll = async () => {
-  return await usersRepository.getAll()
-}
+
 const remove = async id => {
-  return await usersRepository.remove(id)
+  const user = await usersRepository.remove(id)
+  if (!user) {
+    const error = new Error('No se puede eliminar el usuario')
+    error.status = 404
+    throw error
+  }
+  return user
 }
-const usersServices = { getById, update, create, getAll, remove }
+const comparePassword = async () => {
+
+}
+const checkPasswords = async () => {}
+const usersServices = { getById, update, remove }
 
 export default usersServices
