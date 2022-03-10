@@ -9,6 +9,7 @@ const usersSchema = new mongoose.Schema({
   },
   lastname: {
     type: String,
+    required: [true, 'El apellido del usuario es requerido'],
     trim: true
   },
   email: {
@@ -17,12 +18,19 @@ const usersSchema = new mongoose.Schema({
     required: [true, 'El email del usuario es requerido'],
     unique: true
   },
-  hashedPassword: {
+  password: {
     type: String,
-    require: true
+    required: [true, 'La contraseña del usuario se requiere']
   },
   image: {
     type: String
+  },
+  DNI: {
+    type: Number
+  },
+  phone: {
+    type: String,
+    required: [true, 'El numero de celular es requerido']
   },
   roleId: {
     type: Number
