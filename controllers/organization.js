@@ -4,15 +4,28 @@ const create = async (req, res, next) => {
   try {
     const organization = await organizationServices.create(req.body)
     res.status(201).json({ msg: 'El grupo fue creado exitosamente', data: organization })
-  } catch (e) {
-    next(e)
+  } catch (error) {
+    next(error)
   }
 }
-const update = async (req, res) => {}
-const remove = async (req, res) => {}
-const getAll = async (req, res) => {}
-const getById = async (req, res) => {}
+const update = async (req, res, next) => {
+  try {
+    const organization = await organizationServices.update(req.params.id, req.body)
+    res.status(200).json({ msg: 'La organizacion fue actualizada con exito', data: organization })
+  } catch (error) {
+    next(error)
+  }
+}
 
-const organizationControllers = { create, update, remove, getAll, getById }
+const getById = async (req, res, next) => {
+  try {
+    const organization = await organizationServices.getById(req.params.id)
+    res.status(200).json({ data: organization })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const organizationControllers = { create, update, getById }
 
 export default organizationControllers

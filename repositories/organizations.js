@@ -4,15 +4,14 @@ const getById = async (id) => {
   return await Organizations.findById(id)
 }
 const update = async (id, organization) => {
-  return await Organizations.findByIdAndUpdate(id, organization)
+  const org = await Organizations.findByIdAndUpdate(id, organization)
+  console.log('reppo', org)
+  return org
 }
 const create = async (organization) => {
   return await Organizations.create(organization)
 }
-const getAll = async () => {
-  return await Organizations.find({})
-}
 
-const organizationRepository = { getById, update, create, getAll }
+const organizationRepository = { getById, update, create }
 
 export default organizationRepository
