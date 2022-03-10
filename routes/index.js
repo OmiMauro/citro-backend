@@ -1,6 +1,7 @@
 import Express from 'express'
 
 import activities from './activities.js'
+import auth from './auth.js'
 import cars from './cars.js'
 import galery from './galery.js'
 import inscriptions from './inscriptions.js'
@@ -13,6 +14,7 @@ import users from './users.js'
 const indexRouter = Express.Router()
 
 indexRouter.use('/activities', activities)
+indexRouter.use('/auth', auth)
 indexRouter.use('/cars', cars)
 indexRouter.use('/galery', galery)
 indexRouter.use('/inscriptions', inscriptions)
