@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
-import { token } from '../config/config.js'
+import config from '../config/config.js'
 
+const { token } = config
 const createToken = payload => {
   return jwt.sign(payload, token.secret, { expiresIn: token.expiresIn })
 }
