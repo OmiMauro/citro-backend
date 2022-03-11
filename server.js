@@ -8,7 +8,12 @@ import connectDB from './models/index.js'
 import { indexRouter } from './routes/index.js'
 
 const app = express()
-app.use(cors())
+
+const corsOptions = {
+  origin: '*', // Reemplazar con dominio
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 
 // middleware
 app.use(express.json())
