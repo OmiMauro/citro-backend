@@ -35,6 +35,9 @@ const organizationSchema = new mongoose.Schema({
   },
   urlInstagram: {
     type: String
+  },
+  urlWhatsapp: {
+    type: String
   }
 
 })
