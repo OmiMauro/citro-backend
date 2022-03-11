@@ -5,6 +5,12 @@ import bcrypt from 'bcrypt'
 import { createToken } from '../modules/auth.js'
 
 const register = async body => {
+  const isEmailExists = await usersRepository.getByEmail(body.email)
+  if (isEmailExists) {
+    const error = new Error('El email ya se encuentra registrado')
+    error.status = 400
+    throw error
+  }
   // where 1 is ID of role Standard, Admin is 2
   // This is harcoded because only database is possible assign a admin
   const standarRole = await rolesRepository.getById(1)
