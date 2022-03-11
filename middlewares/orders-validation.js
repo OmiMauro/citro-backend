@@ -1,4 +1,4 @@
-import { executeValidation } from './validation-index'
+import { executeValidation } from './validation-index.js'
 import { check, param } from 'express-validator'
 
 const id = param('id', 'Must be input id in the params.')

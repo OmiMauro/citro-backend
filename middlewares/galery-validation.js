@@ -1,4 +1,4 @@
-import { executeValidation } from './validation-index'
+import { executeValidation } from './validation-index.js'
 import { check, param } from 'express-validator'
 import { id, image } from './common-validation.js'
 

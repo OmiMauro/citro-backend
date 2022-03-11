@@ -1,6 +1,6 @@
-import { executeValidation } from './validation-index'
+import { executeValidation } from './validation-index.js'
 import { check, param } from 'express-validator'
-import { name, lastname, image, id, email, phone } from './common-validation'
+import { name, lastname, image, id, email, phone } from './common-validation.js'
 
 const password = check('password')
   .exists().withMessage('Contraseña requerdia').bail()
