@@ -34,6 +34,10 @@ const usersSchema = new mongoose.Schema({
   },
   roleId: {
     type: Number
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
   }
 
 }, {
