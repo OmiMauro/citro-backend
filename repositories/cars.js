@@ -15,5 +15,4 @@ const getAll = async () => {
 const remove = async (id) => {
   return await Cars.findByIdAndRemove(id)
 }
-const carsRepository = { getById, update, create, getAll, remove }
-export default carsRepository
+export default { getById, update, create, getAll, remove }

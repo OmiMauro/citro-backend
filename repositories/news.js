@@ -15,6 +15,5 @@ const getAll = async () => {
 const remove = async (id) => {
   return await News.findByIdAndRemove(id)
 }
-const newsRepository = { getById, update, create, getAll, remove }
 
-export default newsRepository
+export default { getById, update, create, getAll, remove }

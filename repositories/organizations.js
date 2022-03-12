@@ -10,6 +10,4 @@ const create = async (organization) => {
   return await Organizations.create(organization)
 }
 
-const organizationRepository = { getById, update, create }
-
-export default organizationRepository
+export default { getById, update, create }

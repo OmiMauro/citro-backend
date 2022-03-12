@@ -13,5 +13,4 @@ const create = async (inscription) => {
 const getAll = async () => {
   return await Inscriptions.find({})
 }
-const inscriptionsRepository = { getById, update, create, getAll }
-export default inscriptionsRepository
+export default { getById, update, create, getAll }

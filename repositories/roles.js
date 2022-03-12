@@ -15,5 +15,4 @@ const getAll = async () => {
 const remove = async id => {
   return await Roles.findByIdAndRemove(id)
 }
-const rolesRepository = { getById, update, create, getAll, remove }
-export default rolesRepository
+export default { getById, update, create, getAll, remove }

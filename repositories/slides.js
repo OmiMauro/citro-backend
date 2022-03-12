@@ -15,5 +15,4 @@ const getAll = async () => {
 const remove = async id => {
   return await Slides.findByIdAndRemove(id)
 }
-const slidesRepository = { getById, update, create, getAll, remove }
-export default slidesRepository
+export default { getById, update, create, getAll, remove }

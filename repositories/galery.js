@@ -15,5 +15,4 @@ const getAll = async () => {
 const remove = async (id) => {
   return await Galery.findByIdAndRemove(id)
 }
-const galerysRepository = { getById, update, create, getAll, remove }
-export default galerysRepository
+export default { getById, update, create, getAll, remove }

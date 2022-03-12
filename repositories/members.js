@@ -15,5 +15,4 @@ const getAll = async () => {
 const remove = async (id) => {
   return await Members.findByIdAndRemove(id)
 }
-const membersRepository = { getById, update, create, getAll, remove }
-export default membersRepository
+export default { getById, update, create, getAll, remove }

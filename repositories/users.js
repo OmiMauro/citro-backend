@@ -15,5 +15,4 @@ const getAll = async () => {
 const getByEmail = async email => {
   return await Users.findOne({ where: email })
 }
-const usersRepository = { getById, update, create, getAll, getByEmail }
-export default usersRepository
+export default { getById, update, create, getAll, getByEmail }
