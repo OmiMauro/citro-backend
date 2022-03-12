@@ -15,6 +15,5 @@ const getAll = async () => {
 const remove = async id => {
   return await activitiesRepository.remove(id)
 }
-const activitiesServices = { getById, update, create, getAll, remove }
 
-export default activitiesServices
+export default { getById, update, create, getAll, remove }

@@ -1,5 +1,5 @@
 import membersRepository from '../repositories/members.js'
-
+import filesModule from '../modules/files.js'
 const getById = async id => {
   const member = await membersRepository.getById(id)
   if (!member) {
@@ -18,7 +18,9 @@ const update = async (id, body) => {
   }
   return member
 }
-const create = async (body) => {
+const create = async (body, imageFile) => {
+  console.log(imageFile)
+  const imageURL = await filesModule.uploadFile(imageFile)
   const member = await membersRepository.create(body)
   if (!member) {
     const error = new Error('No se pudo crear al organizador')
@@ -46,5 +48,4 @@ const remove = async id => {
   return member
 }
 
-const membersService = { getById, update, create, getAll, remove }
-export default membersService
+export default { getById, update, create, getAll, remove }

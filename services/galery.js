@@ -45,6 +45,5 @@ const remove = async id => {
   }
   return galery
 }
-const galeryServices = { getById, update, create, getAll, remove }
 
-export default galeryServices
+export default { getById, update, create, getAll, remove }

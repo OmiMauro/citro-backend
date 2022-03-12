@@ -63,5 +63,4 @@ const getAll = async () => {
   return users
 }
 
-const authServices = { register, login, getAll }
-export default authServices
+export default { register, login, getAll }

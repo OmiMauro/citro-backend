@@ -29,5 +29,4 @@ const create = async (body) => {
   return organization
 }
 
-const organizationServices = { getById, update, create }
-export default organizationServices
+export default { getById, update, create }

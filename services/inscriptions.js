@@ -15,6 +15,5 @@ const getAll = async () => {
 const remove = async id => {
   return await inscriptionsRepository.remove(id)
 }
-const inscriptionsServices = { getById, update, create, getAll, remove }
 
-export default inscriptionsServices
+export default { getById, update, create, getAll, remove }

@@ -45,6 +45,5 @@ const remove = async id => {
   }
   return slide
 }
-const slidesServices = { getById, update, create, getAll, remove }
 
-export default slidesServices
+export default { getById, update, create, getAll, remove }

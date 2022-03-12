@@ -26,6 +26,5 @@ const comparePassword = async () => {
 
 }
 const checkPasswords = async () => {}
-const usersServices = { getById, update, remove }
 
-export default usersServices
+export default { getById, update, remove }
