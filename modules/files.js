@@ -2,14 +2,14 @@ import cloudinary from './cloudinary.js'
 import path from 'path'
 import fs from 'fs'
 
-const uploadFile = async (file, deleteTempFile = true) => {
+const uploadFile = async (file, deleteTempFile = true, folder) => {
   const fileToCreate = {
     path: file.path,
     ext: path.extname(file.originalname),
     contentType: file.mimetype
   }
   try {
-    const fileUploadedToCloud = await cloudinary.uploadFile(fileToCreate)
+    const fileUploadedToCloud = await cloudinary.uploadFile(fileToCreate, folder)
     if (deleteTempFile) {
       try {
         await deleteLocalFile(file.path)
