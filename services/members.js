@@ -1,5 +1,7 @@
 import membersRepository from '../repositories/members.js'
 import filesModule from '../modules/files.js'
+import imagesRepository from '../repositories/images.js'
+
 const getById = async id => {
   const member = await membersRepository.getById(id)
   if (!member) {
@@ -19,10 +21,11 @@ const update = async (id, body) => {
   return member
 }
 const create = async (body, imageFile) => {
-  console.log(imageFile)
-  const imageURL = await filesModule.uploadFile(imageFile)
+  const imageUpload = await filesModule.uploadFile(imageFile, 'members')
+  const image = await imagesRepository.create(imageUpload)
+  body.image_id = image.id
   const member = await membersRepository.create(body)
-  if (!member) {
+  if (!member || !imageUpload || !image) {
     const error = new Error('No se pudo crear al organizador')
     error.status = 400
     throw error
