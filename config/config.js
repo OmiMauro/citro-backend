@@ -31,5 +31,11 @@ export default {
     apiKey: process.env.SENDGRID_API_KEY,
     email: process.env.SENDGRID_EMAIL,
     sendEmails: process.env.SENDGRID_SEND_EMAILS === 'true'
+  },
+  cloudinary: {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+
   }
 }
