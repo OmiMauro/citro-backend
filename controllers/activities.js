@@ -6,6 +6,4 @@ const remove = async (req, res) => {}
 const getAll = async (req, res) => {}
 const getById = async (req, res) => { }
 
-const activitiesControllers = { create, update, remove, getAll, getById }
-
-export default activitiesControllers
+export default { create, update, remove, getAll, getById }

@@ -41,6 +41,4 @@ const getById = async (req, res, next) => {
   }
 }
 
-const slidesControllers = { create, update, remove, getAll, getById }
-
-export default slidesControllers
+export default { create, update, remove, getAll, getById }

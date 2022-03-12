@@ -6,6 +6,4 @@ const remove = async (req, res) => {}
 const getAll = async (req, res) => {}
 const getById = async (req, res) => { }
 
-const newsControllers = { create, update, remove, getAll, getById }
-
-export default newsControllers
+export default { create, update, remove, getAll, getById }

@@ -2,7 +2,7 @@ import membersService from '../services/members.js'
 
 const create = async (req, res, next) => {
   try {
-    const member = await membersService.create(req.body)
+    const member = await membersService.create(req.body, req.file)
     res.status(201).json({ msg: 'El organizador fue creado.', data: member })
   } catch (error) {
     next(error)
@@ -40,5 +40,4 @@ const getById = async (req, res, next) => {
     next(error)
   }
 }
-const membersControlllers = { create, update, remove, getAll, getById }
-export default membersControlllers
+export default { create, update, remove, getAll, getById }

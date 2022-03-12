@@ -17,6 +17,4 @@ const remove = async (req, res, next) => {
   }
 }
 
-const usersControllers = { update, remove }
-
-export default usersControllers
+export default { update, remove }

@@ -26,6 +26,4 @@ const getById = async (req, res, next) => {
   }
 }
 
-const organizationControllers = { create, update, getById }
-
-export default organizationControllers
+export default { create, update, getById }

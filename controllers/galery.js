@@ -41,6 +41,4 @@ const getById = async (req, res, next) => {
   }
 }
 
-const galeryControllers = { create, update, remove, getAll, getById }
-
-export default galeryControllers
+export default { create, update, remove, getAll, getById }

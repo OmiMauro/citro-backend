@@ -28,5 +28,4 @@ const getAll = async (req, res, next) => {
     next(error)
   }
 }
-const authControllers = { register, login, me, getAll }
-export default authControllers
+export default { register, login, me, getAll }
