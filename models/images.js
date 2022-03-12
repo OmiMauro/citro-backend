@@ -1,13 +1,22 @@
 import mongoose from 'mongoose'
 
 const imageSchema = new mongoose.Schema({
-  description: {
-    type: String,
-    defaul: 'CitroRodando'
-  },
-  url: { type: String },
-  filename: { type: String },
-  user: { type: mongoose.Schema.Types.ObjectId }
+  asset_id:
+   { type: String },
+  public_id:
+   { type: String },
+  version_id:
+   { type: String },
+  signature:
+   { type: String },
+  url:
+   { type: String },
+  secure_url:
+   { type: String },
+  original_filename:
+   { type: String },
+  api_key:
+   { type: String }
 })
 
 const Image = mongoose.model('Image', imageSchema)
