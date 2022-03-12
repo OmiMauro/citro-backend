@@ -7,7 +7,7 @@ const order = check('order')
   .isInt()
 
 const createValidation = [image, order, executeValidation]
-const removeValidation = [id, executeValidation]
+const idValidation = [id, executeValidation]
 const updateValidation = [id, image, order, executeValidation]
 
-export { createValidation, removeValidation, updateValidation }
+export { createValidation, idValidation, updateValidation }
