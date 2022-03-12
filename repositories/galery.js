@@ -6,8 +6,8 @@ const getById = async (id) => {
 const update = async (id, image) => {
   return await Galery.findByIdAndUpdate(id, image)
 }
-const create = async (image) => {
-  return await Galery.create(image)
+const create = async (imageId) => {
+  return await Galery.create({ image_id: imageId })
 }
 const getAll = async () => {
   return await Galery.find({})
