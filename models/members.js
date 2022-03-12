@@ -12,10 +12,6 @@ const membersSchema = new Schema({
     required: [true, 'El apellido de la organizacion es obligatorio'],
     trim: true
   },
-  image: {
-    type: String,
-    trim: true
-  },
   phone: {
     type: String,
     trim: true
@@ -28,6 +24,10 @@ const membersSchema = new Schema({
   },
   urlWhatsapp: {
     type: String
+  },
+  image_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
   }
 },
 {

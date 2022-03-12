@@ -9,8 +9,9 @@ const organizationSchema = new mongoose.Schema({
     required: [true, 'El nombre de la organización es obligatorio'],
     trim: true
   },
-  image: {
-    type: String
+  image_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
   },
   phone: {
     type: String,

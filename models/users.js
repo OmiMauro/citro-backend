@@ -22,8 +22,9 @@ const usersSchema = new mongoose.Schema({
     type: String,
     required: [true, 'La contraseña del usuario se requiere']
   },
-  image: {
-    type: String
+  image_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
   },
   DNI: {
     type: Number

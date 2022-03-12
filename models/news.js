@@ -14,8 +14,9 @@ const newsSchema = new Schema({
     required: [true, 'El contenido de la novedad es obligatorio'],
     trim: true
   },
-  image: {
-    type: String
+  image_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
   }
 },
 {

@@ -10,10 +10,9 @@ const activitiesSchema = new Schema({
     type: String,
     required: [true, 'La description es requerida']
   },
-  image: {
-    type: String,
-    required: [true, 'El color del auto es obligatorio'],
-    trim: true
+  image_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
   }
 }, {
   timestamps: true

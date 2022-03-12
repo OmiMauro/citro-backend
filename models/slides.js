@@ -13,6 +13,10 @@ const slidesSchema = new Schema({
   },
   order: {
     type: Number
+  },
+  image_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
   }
 
 }, { timestamps: true })
