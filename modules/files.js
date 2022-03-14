@@ -25,4 +25,4 @@ const uploadFile = async (file, deleteTempFile = true, folder) => {
 
 const deleteLocalFile = async filePath => await fs.promises.unlink(filePath)
 
-export default { uploadFile }
+export default { uploadFile, deleteLocalFile }

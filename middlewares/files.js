@@ -1,6 +1,6 @@
 import multer from 'multer'
 
-const validateSingleImage = ({ required = false, keyName = 'image' }) => {
+const validateSingleImage = ({ required = false, keyName = 'image' } = { required: false, keyName: 'image' }) => {
   const middlewareForMulter = (req, res, next) => {
     try {
       const multerConfig = getSingleImage()
