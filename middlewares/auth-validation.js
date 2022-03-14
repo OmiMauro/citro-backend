@@ -9,6 +9,7 @@ const password = check('password')
 
 const registerValidation = [name, lastname, email, password, image, phone, executeValidation]
 const loginValidation = [email, password, executeValidation]
-const updateValidation = [id, executeValidation]
+const updateValidation = [id, name, lastname, email, password, image, phone, executeValidation]
+const idValidation = [id, executeValidation]
 
-export { registerValidation, loginValidation, updateValidation }
+export { registerValidation, loginValidation, updateValidation, idValidation }
