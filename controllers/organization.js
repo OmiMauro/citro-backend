@@ -2,7 +2,7 @@ import organizationServices from '../services/organization.js'
 
 const create = async (req, res, next) => {
   try {
-    const organization = await organizationServices.create(req.body)
+    const organization = await organizationServices.create(req.body, req.file)
     res.status(201).json({ msg: 'El grupo fue creado exitosamente', data: organization })
   } catch (error) {
     next(error)

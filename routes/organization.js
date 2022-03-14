@@ -6,7 +6,7 @@ import { createValidation, updateValidation } from '../middlewares/organizations
 const router = Express.Router()
 
 router.post('/', isAuth, isAdmin, filesMiddleware.validateSingleImage({ required: true }), createValidation, organizationControllers.create)
-router.get('/', organizationControllers.getById)
+router.get('/:id', organizationControllers.getById)
 router.put('/:id', isAuth, isAdmin, filesMiddleware.validateSingleImage(), updateValidation, organizationControllers.update)
 
 export default router
