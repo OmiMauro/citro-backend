@@ -2,7 +2,7 @@ import slidesServices from '../services/slides.js'
 
 const create = async (req, res, next) => {
   try {
-    const slide = await slidesServices.create(req.body)
+    const slide = await slidesServices.create(req.body, req.file)
     res.status(201).json({ msg: 'El slide fue creado.', data: slide })
   } catch (error) {
     next(error)
