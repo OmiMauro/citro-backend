@@ -1,4 +1,4 @@
-import { verifyToken } from '../modules/auth'
+import { verifyToken } from '../modules/auth.js'
 import config from '../config/config.js'
 import rolesRepository from '../repositories/roles.js'
 import usersRepository from '../repositories/users.js'
