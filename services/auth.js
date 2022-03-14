@@ -2,15 +2,22 @@
 import rolesRepository from '../repositories/roles.js'
 import usersRepository from '../repositories/users.js'
 import bcrypt from 'bcrypt'
+import filesModule from '../modules/files.js'
+import imagesRepository from '../repositories/images.js'
+
 import { createToken } from '../modules/auth.js'
 
-const register = async body => {
+const register = async (body, imageFile) => {
   const isEmailExists = await usersRepository.getByEmail(body.email)
   if (isEmailExists) {
+    filesModule.deleteLocalFile(imageFile)
     const error = new Error('El email ya se encuentra registrado')
     error.status = 400
     throw error
   }
+  const imageUpload = await filesModule.uploadFile(imageFile, 'slides')
+  const image = await imagesRepository.create(imageUpload)
+  body.image_id = image.id
   // where 1 is ID of role Standard, Admin is 2
   // This is harcoded because only database is possible assign a admin
   const standarRole = await rolesRepository.getById(1)

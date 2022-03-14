@@ -25,6 +25,7 @@ const create = async (imageFile) => {
   const image = await imagesRepository.create(imageUpload)
   const galery = await galeryRepository.create(image._id)
   if (!galery || !image || !imageUpload) {
+    filesModule.deleteLocalFile(imageFile)
     const error = new Error('No se pudo agregar la imagen')
     error.status = 400
     throw error

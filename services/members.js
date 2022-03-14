@@ -26,6 +26,7 @@ const create = async (body, imageFile) => {
   body.image_id = image.id
   const member = await membersRepository.create(body)
   if (!member || !imageUpload || !image) {
+    filesModule.deleteLocalFile(imageFile)
     const error = new Error('No se pudo crear al organizador')
     error.status = 400
     throw error
