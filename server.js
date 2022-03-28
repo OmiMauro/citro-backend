@@ -20,7 +20,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(logger('dev'))
 connectDB()
-app.use('/api', indexRouter)
+app.use('/api/v2', indexRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
