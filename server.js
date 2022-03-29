@@ -1,53 +1,48 @@
 import express from 'express'
-import mongoose from 'mongoose'
-import morgan from 'morgan'
-import bodyParser from 'body-parser'
+import logger from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import path from 'path'
-import expressValidator from 'express-validator'
-import dotenv from 'dotenv/config'
-// Routes of application
+import 'dotenv/config'
+import createError from 'http-errors'
+import connectDB from './models/index.js'
+import { indexRouter } from './routes/index.js'
 
-// import routes
-import authRoutes from './routes/authRoute.js'
-import userRoutes from './routes/userRoute.js'
-import inscriptionRoutes from './routes/inscriptionRoute.js'
-import mercadopagoRoutes from './routes/mercadopagoRoutes.js'
-import imageRouter from './routes/imagesRoute.js'
-const App = express()
+const app = express()
 
-// db
-mongoose
-  .connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-  })
-  .then(() => console.log('DB Connected'))
+const corsOptions = {
+  origin: '*', // Reemplazar con dominio
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 
 // middleware
-App.use(morgan('dev'))
-App.use(bodyParser.json())
-App.use(cookieParser())
-App.use(expressValidator())
-App.use(cors())
+app.use(express.json())
+app.use(cookieParser())
+app.use(logger('dev'))
+connectDB()
+app.use('/api', indexRouter)
 
-// routes middleware
-App.use('/api', authRoutes)
-App.use('/api', userRoutes)
-App.use('/api', inscriptionRoutes)
-App.use('/api', mercadopagoRoutes)
-App.use('/api', imageRouter)
-
-App.use(express.static(process.cwd() + '/build'))
-App.get('*', function (request, response) {
-  response.sendFile(path.resolve(process.cwd(), 'build', 'index.html'))
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+  next(createError(404))
 })
-App.use(express.static('build'))
-const port = process.env.PORT || 8000
 
-App.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
+// error handler
+app.use((err, req, res, next) => {
+  // set locals, only providing error in development
+  res.locals.message = err.message
+  res.locals.error = req.app.get('env') === 'development' ? err : {}
+
+  // normalize error
+  if (!err.status) {
+    err.status = 500
+    err.message = 'Internal Server Error'
+  }
+
+  if (err.validationError) {
+    return res.status(err.status).json(err.validationError)
+  }
+
+  res.status(err.status).json({ error: err.message })
 })
+export default app
