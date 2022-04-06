@@ -14,9 +14,9 @@ const uploadFile = async (file, deleteTempFile = true, folder) => {
 			fileToCreate,
 			folder
 		)
-		if (deleteTempFile) {
+		if (deleteTempFile || !fileUploadedToCloud) {
 			try {
-				await deleteLocalFile(file.path)
+				await deleteLocalFile(file)
 			} catch (error) {
 				console.error('error to remove file', error)
 			}
@@ -27,6 +27,8 @@ const uploadFile = async (file, deleteTempFile = true, folder) => {
 	}
 }
 
-const deleteLocalFile = async (filePath) => await fs.promises.unlink(filePath)
+const deleteLocalFile = async (filePath) => {
+	return await fs.promises.unlink(filePath.path)
+}
 
 export default { uploadFile, deleteLocalFile }
