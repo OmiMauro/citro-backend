@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> refactorapi
 import rolesRepository from '../repositories/roles.js'
 import usersRepository from '../repositories/users.js'
 import bcrypt from 'bcrypt'
@@ -18,9 +14,6 @@ const register = async (body, imageFile) => {
 		error.status = 400
 		throw error
 	}
-	const imageUpload = await filesModule.uploadFile(imageFile, true, 'users')
-	const image = await imagesRepository.create(imageUpload)
-	body.image_id = image.id
 	// where 1 is ID of role Standard, Admin is 2
 	// This is harcoded because only database is possible assign a admin
 	const standarRole = await rolesRepository.getById(1)
