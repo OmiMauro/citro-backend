@@ -2,7 +2,7 @@ import authServices from '../services/auth.js'
 
 const register = async (req, res, next) => {
 	try {
-		const user = await authServices.register(req.body, req.file)
+		const user = await authServices.register(req.body)
 		res.status(201).json({ msg: 'El usuario se creó con exito', data: user })
 	} catch (error) {
 		next(error)

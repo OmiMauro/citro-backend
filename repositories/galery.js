@@ -10,7 +10,7 @@ const create = async (imageId) => {
 	return await Galery.create({ image_id: imageId })
 }
 const getAll = async () => {
-	await Galery.find({}).populate('image_id')
+	return await Galery.find({}).populate('image_id')
 }
 const remove = async (id) => {
 	return await Galery.findByIdAndRemove(id)
