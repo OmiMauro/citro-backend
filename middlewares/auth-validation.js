@@ -7,7 +7,7 @@ const password = check('password')
   .isString().withMessage('Ingrese una cadena de caracteres').bail()
   .notEmpty().withMessage('No puede ser vacio').bail()
 
-const registerValidation = [name, lastname, email, password, image, phone, executeValidation]
+const registerValidation = [name, lastname, email, password, phone, executeValidation]
 const loginValidation = [email, password, executeValidation]
 const updateValidation = [id, name, lastname, email, password, image, phone, executeValidation]
 const idValidation = [id, executeValidation]
