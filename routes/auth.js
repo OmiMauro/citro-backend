@@ -9,12 +9,7 @@ import {
 const router = Express.Router()
 
 router.get('/', isAuth, isAdmin, authControllers.getAll)
-router.post(
-	'/register',
-	filesMiddleware.validateSingleImage({ required: true }),
-	registerValidation,
-	authControllers.register
-)
+router.post('/register', registerValidation, authControllers.register)
 router.post('/login', loginValidation, authControllers.login)
 router.get('/me', isAuth, authControllers.me)
 
