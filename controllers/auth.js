@@ -10,10 +10,11 @@ const register = async (req, res, next) => {
 }
 const login = async (req, res, next) => {
 	try {
-		const token = await authServices.login(req.body)
-		res
-			.status(200)
-			.json({ msg: 'Se inicio sesion con exito', data: { ok: true, token } })
+		const { user, token } = await authServices.login(req.body)
+		res.status(200).json({
+			msg: 'Se inicio sesion con exito',
+			data: { ok: true, token, user }
+		})
 	} catch (error) {
 		res.status(error.status).json({
 			errors: [error.message],
