@@ -53,7 +53,7 @@ const login = async (body) => {
 		lastname: user.lastname
 	}
 	const token = createToken(payload)
-	return token
+	return { token, user: payload }
 }
 
 const getAll = async () => {
