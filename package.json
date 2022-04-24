@@ -19,6 +19,8 @@
 	"license": "ISC",
 	"dependencies": {
 		"@abslibs/mongoose-plugin": "^1.0.7",
+		"@sentry/node": "^6.19.6",
+		"@sentry/tracing": "^6.19.6",
 		"bcrypt": "^5.0.1",
 		"cloudinary": "^1.28.1",
 		"cookie-parser": "^1.4.5",
