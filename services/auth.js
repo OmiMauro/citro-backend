@@ -6,22 +6,19 @@ import imagesRepository from '../repositories/images.js'
 
 import { createToken } from '../modules/auth.js'
 
-const register = async (body, imageFile) => {
+const register = async (body) => {
 	const emailExists = await isEmailExists(body.email)
 	if (emailExists) {
-		await removeFile(imageFile)
 		const error = new Error('El email ya se encuentra registrado')
 		error.status = 400
 		throw error
 	}
-
 	// where 1 is ID of role Standard, Admin is 2
-	// This is harcoded because only database is possible assign a admin
 	const standarRole = await rolesRepository.getById(1)
 	const newUser = {
 		...body,
 		roleId: standarRole._id,
-		password: await bcrypt.hashSync(body.password, 11)
+		password: await bcrypt.hashSync(body.password, 9)
 	}
 	const user = await usersRepository.create(newUser)
 	if (!user) {
@@ -29,14 +26,14 @@ const register = async (body, imageFile) => {
 		error.status = 400
 		throw error
 	}
-	user.password = ''
+	user.password = null
 	return user
 }
 const login = async (body) => {
 	const user = await usersRepository.getByEmail(body.email)
 	if (!user) {
 		const error = new Error('Email o contraseñas incorrectas')
-		error.status = 404
+		error.status = 400
 		throw error
 	}
 	const comparePassword = await bcrypt.compareSync(body.password, user.password)
