@@ -9,15 +9,13 @@ const isAuth = async (req, res, next) => {
 		const token = getTokenPayload(req)
 		const user = await usersRepository.getById(token.userId)
 		if (!user) {
-			const error = new Error('Token no valido')
-			error.status = 403
-			throw error
+			return res.status(403).json({ errors: [{ msg: 'Token no valido' }] })
 		}
 		user.password = ''
 		req.authUser = user
 		next()
 	} catch (error) {
-		next(error)
+		return res.status(error.status).json({ errors: [{ msg: error.message }] })
 	}
 }
 const isAdmin = async (req, res, next) => {
@@ -25,9 +23,9 @@ const isAdmin = async (req, res, next) => {
 		const { authUser } = req
 		const roleUser = await rolesRepository.getById(authUser.roleId)
 		if (roleUser.name !== adminRoleName) {
-			const error = new Error('Recurso solo para administradores')
-			error.status = 403
-			throw error
+			return res
+				.status(403)
+				.json({ errors: [{ msg: 'Recurso solo para administradores' }] })
 		}
 		next()
 	} catch (error) {
@@ -43,9 +41,9 @@ const getTokenPayload = (req) => {
 		tokenHeader.startsWith('Bearer ') &&
 		tokenHeader.split(' ')[1]
 	if (!token) {
-		const error = new Error('Por favor, ingrese un token en el headers')
-		error.status = 403
-		throw error
+		return res.status(403).json({
+			errors: [{ msg: 'Por favor, ingrese un token en el headers' }]
+		})
 	}
 	return verifyToken(token)
 }

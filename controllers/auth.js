@@ -13,13 +13,13 @@ const register = async (req, res, next) => {
 }
 const login = async (req, res, next) => {
 	try {
-		const { user, token } = await authServices.login(req.body)
+		const { token } = await authServices.login(req.body)
 		return res.status(200).json({
 			msg: 'Se inicio sesion con exito',
-			data: { ok: true, token, user }
+			data: { ok: true, token }
 		})
 	} catch (error) {
-		res.status(error.status).json({
+		return res.status(error.status).json({
 			errors: [{ msg: error.message }],
 			data: { ok: false }
 		})
