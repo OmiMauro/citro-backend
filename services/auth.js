@@ -7,6 +7,7 @@ import imagesRepository from '../repositories/images.js'
 import { createToken } from '../modules/auth.js'
 
 const register = async (body) => {
+	const { email, password, name, lastname, phone } = body
 	const emailExists = await isEmailExists(body.email)
 	if (emailExists) {
 		const error = new Error('El email ya se encuentra registrado')
@@ -30,13 +31,14 @@ const register = async (body) => {
 	return user
 }
 const login = async (body) => {
-	const user = await usersRepository.getByEmail(body.email)
+	const { email, password } = body
+	const user = await usersRepository.getByEmail(email)
 	if (!user) {
 		const error = new Error('Email o contraseñas incorrectas')
 		error.status = 400
 		throw error
 	}
-	const comparePassword = await bcrypt.compareSync(body.password, user.password)
+	const comparePassword = await bcrypt.compareSync(password, user.password)
 	if (!comparePassword) {
 		const error = new Error('Email o contraseñas incorrectas')
 		error.status = 400
@@ -50,7 +52,7 @@ const login = async (body) => {
 		lastname: user.lastname
 	}
 	const token = createToken(payload)
-	return { token, user: payload }
+	return { token }
 }
 
 const getAll = async () => {
