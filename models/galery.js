@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate'
+
 const Schema = mongoose.Schema
 
 const galerySchema = new Schema(
@@ -12,6 +14,12 @@ const galerySchema = new Schema(
 		timestamps: true
 	}
 )
+mongoosePaginate.paginate.options = {
+	lean: true,
+	limit: 20
+}
+
+galerySchema.plugin(mongoosePaginate)
 
 const Galery = mongoose.model('Galery', galerySchema)
 

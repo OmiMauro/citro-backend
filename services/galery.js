@@ -37,8 +37,8 @@ const create = async (body, files) => {
 	return allPics
 }
 
-const getAll = async () => {
-	const galery = await galeryRepository.getAll()
+const getAll = async (page) => {
+	const galery = await galeryRepository.getAll(page)
 	if (!galery) {
 		const error = new Error('No se pudo encontrar imagenes')
 		error.status = 400

@@ -32,7 +32,8 @@ const remove = async (req, res, next) => {
 }
 const getAll = async (req, res, next) => {
 	try {
-		const galeries = await galeryServices.getAll()
+		const { page } = req.query
+		const galeries = await galeryServices.getAll(page)
 		res.status(201).json({ data: galeries })
 	} catch (error) {
 		res
