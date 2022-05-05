@@ -1,7 +1,7 @@
 import { Members } from '../models/members.js'
 
 const getById = async (id) => {
-	return await Members.findById(id)
+	return await Members.findById(id).populate('image_id')
 }
 const update = async (id, member) => {
 	return await Members.findByIdAndUpdate(id, member)
