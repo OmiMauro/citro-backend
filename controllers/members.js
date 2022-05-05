@@ -27,7 +27,9 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
 	try {
 		const member = await membersService.remove(req.params.id)
-		res.status(200).json({ msg: 'El organizador fue eliminado.' })
+		res
+			.status(200)
+			.json({ msg: 'El organizador fue eliminado.', _id: member._id })
 	} catch (error) {
 		res.status(error.status).json({
 			errors: [{ msg: error.message }],
@@ -57,4 +59,17 @@ const getById = async (req, res, next) => {
 		})
 	}
 }
-export default { create, update, remove, getAll, getById }
+const updateImage = async (req, res, next) => {
+	try {
+		const member = await membersService.updateImage(req.params.id, req.file)
+		res
+			.status(201)
+			.json({ msg: 'El organizador fue actualizado.', data: member })
+	} catch (error) {
+		res.status(error.status).json({
+			errors: [{ msg: error.message }],
+			data: false
+		})
+	}
+}
+export default { create, update, remove, getAll, getById, updateImage }
