@@ -31,4 +31,11 @@ const deleteLocalFile = async (filePath) => {
 	return await fs.promises.unlink(filePath.path)
 }
 
-export default { uploadFile, deleteLocalFile }
+const deleteFileFromCloudinary = async (publicId) => {
+	return await cloudinary.deleteFile(publicId)
+}
+export default {
+	uploadFile,
+	deleteLocalFile,
+	deleteFileFromCloudinary
+}
