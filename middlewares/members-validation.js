@@ -26,7 +26,6 @@ const updateValidation = [
 	id,
 	name,
 	lastname,
-	image,
 	phone,
 	urlFacebook,
 	urlInstragram,
