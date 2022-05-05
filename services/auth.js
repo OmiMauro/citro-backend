@@ -1,9 +1,6 @@
 import rolesRepository from '../repositories/roles.js'
 import usersRepository from '../repositories/users.js'
 import bcrypt from 'bcrypt'
-import filesModule from '../modules/files.js'
-import imagesRepository from '../repositories/images.js'
-
 import { createToken } from '../modules/auth.js'
 
 const register = async (body) => {
@@ -52,7 +49,7 @@ const login = async (body) => {
 		lastname: user.lastname
 	}
 	const token = createToken(payload)
-	return { token }
+	return { token, user: { name: user.name, roleId: user.roleId } }
 }
 
 const getAll = async () => {
@@ -66,8 +63,5 @@ const getAll = async () => {
 }
 
 const isEmailExists = async (email) => await usersRepository.getByEmail(email)
-
-const removeFile = async (filePath) =>
-	await filesModule.deleteLocalFile(filePath)
 
 export default { register, login, getAll }
