@@ -1,6 +1,7 @@
 import galeryRepository from '../repositories/galery.js'
 import imagesRepository from '../repositories/images.js'
 import filesModule from '../modules/files.js'
+import cloudinary from '../modules/cloudinary.js'
 
 const getById = async (id) => {
 	const galery = await galeryRepository.getById(id)
@@ -12,7 +13,8 @@ const getById = async (id) => {
 	return galery
 }
 const update = async (id, image) => {
-	const galery = await galeryRepository.update(id, image)
+	const { text } = image
+	const galery = await galeryRepository.update(id, { text })
 	if (!galery) {
 		const error = new Error('No se pudo encontrar el ID')
 		error.status = 404
@@ -22,18 +24,18 @@ const update = async (id, image) => {
 }
 const create = async (body, files) => {
 	const allPics = []
-	await files.forEach(async (item) => {
-		const imageUpload = await filesModule.uploadFile(item, true, 'galery')
+	for (let i = 0; i < files.length; i++) {
+		const imageUpload = await filesModule.uploadFile(files[i], true, 'galery')
 		const image = await imagesRepository.create(imageUpload)
 		const galery = await galeryRepository.create(image._id)
-		if (!galery || !image || !imageUpload) {
+		if (!galery || !image) {
 			await filesModule.deleteLocalFile(item)
 			const error = new Error('No se pudo agregar la imagen')
 			error.status = 400
 			throw error
 		}
 		allPics.push(galery)
-	})
+	}
 	return allPics
 }
 
@@ -47,14 +49,16 @@ const getAll = async (page) => {
 	return galery
 }
 const remove = async (id) => {
-	//missing remove image from cloudinary
-	const galery = await galeryRepository.remove(id)
+	const galery = await galeryRepository.getById(id)
 	if (!galery) {
 		const error = new Error('No se pudo encontrar el ID')
 		error.status = 404
 		throw error
 	}
-	return galery
+	const fileRemove = await cloudinary.deleteFile(galery.image_id)
+	const imageRemove = await imagesRepository.remove(galery.image_id)
+	const galeryRemove = await galeryRepository.remove(id)
+	return galeryRemove
 }
 
 export default { getById, update, create, getAll, remove }
