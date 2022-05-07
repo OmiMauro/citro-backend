@@ -21,14 +21,7 @@ router.post(
 	slidesControllers.create
 )
 router.get('/:id', isAuth, isAdmin, idValidation, slidesControllers.getById)
-router.put(
-	'/:id',
-	isAuth,
-	isAdmin,
-	filesMiddleware.validateSingleImage(),
-	updateValidation,
-	slidesControllers.update
-)
+router.put('/:id', isAuth, isAdmin, updateValidation, slidesControllers.update)
 router.delete('/:id', isAuth, isAdmin, idValidation, slidesControllers.remove)
 
 export default router
