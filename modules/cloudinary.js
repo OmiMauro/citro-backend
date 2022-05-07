@@ -23,8 +23,22 @@ const uploadFile = async (file, folder = 'citros') => {
 		console.log(error)
 	}
 }
-const deleteFile = async (publicId) => {
-	return await v2.uploader.destroy(publicId)
+
+
+const deleteFile = async (image_id) => {
+	try {
+		const image = await imagesRepository.getById(image_id)
+		if !image) {
+			const error = new Error('No se encontro una imagen con el ID')
+			error.status = 404
+			throw error
+		}
+		return await v2.uploader.destroy(publicId)
+	} catch (error) {
+		const err = new Error(error.message)
+		err.status = 500
+		throw err
+	}
 }
 
 export default { uploadFile, deleteFile }
