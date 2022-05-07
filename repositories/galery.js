@@ -1,5 +1,5 @@
 import { Galery } from '../models/galery.js'
-
+import { limitPagination } from '../config/config.js'
 const getById = async (id) => {
 	return await Galery.findById(id).populate('image_id', '_id url secure_url')
 }
@@ -12,7 +12,7 @@ const create = async (imageId) => {
 const getAll = async (page = 1) => {
 	return await Galery.paginate(
 		{},
-		{ page /* , limit: 12 */, populate: 'image_id' }
+		{ page, limit: limitPagination || 10, populate: 'image_id' }
 	)
 	//return await Galery.find({}).populate('image_id')
 }
