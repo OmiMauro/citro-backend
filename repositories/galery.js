@@ -14,7 +14,6 @@ const getAll = async (page = 1) => {
 		{},
 		{ page, limit: config.limitPagination || 10, populate: 'image_id' }
 	)
-	//return await Galery.find({}).populate('image_id')
 }
 const remove = async (id) => {
 	return await Galery.findByIdAndRemove(id)
