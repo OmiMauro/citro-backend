@@ -24,11 +24,10 @@ const uploadFile = async (file, folder = 'citros') => {
 	}
 }
 
-
 const deleteFile = async (image_id) => {
 	try {
 		const image = await imagesRepository.getById(image_id)
-		if !image) {
+		if (!image) {
 			const error = new Error('No se encontro una imagen con el ID')
 			error.status = 404
 			throw error
