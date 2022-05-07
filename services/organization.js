@@ -1,9 +1,12 @@
 import organizationRepository from '../repositories/organizations.js'
 import filesModule from '../modules/files.js'
 import imagesRepository from '../repositories/images.js'
-
+import config from '../config/config.js'
+import cloudinary from '../modules/cloudinary.js'
 const getById = async (id) => {
-	const organization = await organizationRepository.getById(id)
+	const organization = await organizationRepository.getById(
+		config.organizationId
+	)
 	if (!organization) {
 		const error = new Error('No se pudo encontrar la organizacion con el ID')
 		error.status = 404
@@ -18,6 +21,25 @@ const update = async (id, body) => {
 		error.status = 404
 		throw error
 	}
+	return organization
+}
+const updateImage = async (imageFile) => {
+	const imageUpload = await filesModule.uploadFile(
+		imageFile,
+		true,
+		'organization'
+	)
+	if (!imageUpload) {
+		filesModule.deleteLocalFile(imageFile)
+	}
+	const organization = await organizationRepository.getById(
+		config.organizationId
+	)
+	const image = await imagesRepository.update(
+		organization.image_id,
+		imageUpload
+	)
+
 	return organization
 }
 const create = async (body, imageFile) => {
