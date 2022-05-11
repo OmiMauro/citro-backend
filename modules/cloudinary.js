@@ -1,7 +1,7 @@
 import { v2 } from 'cloudinary'
 import config from '../config/config.js'
 import fs from 'fs'
-
+import imagesRepository from '../repositories/images.js'
 const { cloudinary } = config
 
 v2.config({
@@ -32,8 +32,9 @@ const deleteFile = async (image_id) => {
 			error.status = 404
 			throw error
 		}
-		return await v2.uploader.destroy(publicId)
+		return await v2.uploader.destroy(image.public_id)
 	} catch (error) {
+		console.log(error)
 		const err = new Error(error.message)
 		err.status = 500
 		throw err
