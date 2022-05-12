@@ -1,29 +1,26 @@
-import nodemailer from 'nodemailer-'
-
+import nodemailer from 'nodemailer'
 import config from '../config/config.js'
 const transporter = nodemailer.createTransport({
 	host: config.nodemailer.host,
 	port: config.nodemailer.port,
-	secure: true,
 	auth: {
 		user: config.nodemailer.user,
 		pass: config.nodemailer.pass
 	}
 })
-
 const send = async ({ to, subject, html, text }) => {
 	if (!transporter) {
 		return
 	}
 	const mailToSend = {
-		from: config.nodemailer.host,
+		from: config.nodemailer.user,
 		to,
 		subject,
 		html: html,
 		text: html ? undefined : text
 	}
 	try {
-		await transporter.sendMail(mailToSend)
+		return await transporter.sendMail(mailToSend)
 	} catch (error) {
 		error.message = nodemailerErrorToString(error)
 		throw error
