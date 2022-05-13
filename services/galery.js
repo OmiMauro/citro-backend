@@ -56,6 +56,11 @@ const remove = async (id) => {
 		throw error
 	}
 	const fileRemove = await cloudinary.deleteFile(galery.image_id)
+	if (!fileRemove) {
+		const error = new Error('Ocurrio un error al eliminar la imagen.')
+		error.status = 400
+		throw error
+	}
 	const imageRemove = await imagesRepository.remove(galery.image_id)
 	const galeryRemove = await galeryRepository.remove(id)
 	return galeryRemove
