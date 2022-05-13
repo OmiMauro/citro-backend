@@ -25,7 +25,9 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
 	try {
 		const slide = await slidesServices.remove(req.params.id)
-		res.status(200).json({ msg: 'El slide fue eliminado.' })
+		res
+			.status(200)
+			.json({ msg: 'El slide fue eliminado.', data: { _id: slide._id } })
 	} catch (error) {
 		res.status(error.status).json({
 			errors: [{ msg: error.message }],
