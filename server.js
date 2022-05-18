@@ -9,6 +9,7 @@ import { indexRouter } from './routes/index.js'
 import Sentry from '@sentry/node'
 import Tracing from '@sentry/tracing'
 import config from './config/config.js'
+import helmet from 'helmet'
 const app = express()
 
 const corsOptions = {
@@ -37,8 +38,8 @@ app.use(Sentry.Handlers.requestHandler())
 app.use(Sentry.Handlers.tracingHandler())
 
 app.use(cors(corsOptions))
-
 // middleware
+app.use(helmet())
 app.use(express.json())
 app.use(cookieParser())
 app.use(logger('dev'))
@@ -72,4 +73,5 @@ app.use((err, req, res, next) => {
 
 	res.status(err.status).json({ error: err.message })
 })
+
 export default app
