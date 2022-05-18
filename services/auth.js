@@ -2,7 +2,8 @@ import rolesRepository from '../repositories/roles.js'
 import usersRepository from '../repositories/users.js'
 import bcrypt from 'bcrypt'
 import { createToken } from '../modules/auth.js'
-
+import { createTemplate } from '../modules/template-email.js'
+import { send } from '../modules/email.js'
 const register = async (body) => {
 	const { email, password, name, lastname, phone } = body
 	const emailExists = await isEmailExists(body.email)
@@ -24,9 +25,22 @@ const register = async (body) => {
 		error.status = 400
 		throw error
 	}
+	const token = await createToken({ email: user.email, _userId: user._id })
+	const persistedToken = await tokenReponsitory.create({
+		token,
+		_userId: user._id
+	})
+	const headersEmail = {
+		to: user.email,
+		subject: 'Bienvenido',
+		html: createTemplate(user.email, 'welcomeEmailTemplate.ejs')
+	}
+	const sendingEmail = await send(headersEmail)
+
 	user.password = null
 	return user
 }
+
 const login = async (body) => {
 	const { email, password } = body
 	const user = await usersRepository.getByEmail(email)
@@ -41,6 +55,13 @@ const login = async (body) => {
 		error.status = 400
 		throw error
 	}
+	if (!user.isVerified) {
+		const error = new Error(
+			'Su email aún no fue verificado. Por favor, verifique su casilla de emails'
+		)
+		error.status = 403
+		throw error
+	}
 	const payload = {
 		email: user.email,
 		userId: user._id,
@@ -48,6 +69,7 @@ const login = async (body) => {
 		name: user.name,
 		lastname: user.lastname
 	}
+
 	const token = createToken(payload)
 	return { token, user: { name: user.name, roleId: user.roleId } }
 }
@@ -64,4 +86,5 @@ const getAll = async () => {
 
 const isEmailExists = async (email) => await usersRepository.getByEmail(email)
 
-export default { register, login, getAll }
+const confirmEmail = async (params) => {}
+export default { register, login, getAll, confirmEmail }
