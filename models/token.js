@@ -1,19 +1,28 @@
-
 import mongoose from 'mongoose'
 
-const tokenSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
-    required: true
-  },
-  expiredAt: {
-    type: Date
-  }
-},
-{
-  timestamps: true
-})
+const tokenSchema = new mongoose.Schema(
+	{
+		_userId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Users',
+			required: true
+		},
+		token: {
+			type: String,
+			required: true
+		},
+		expiredAt: {
+			type: Date,
+			default: Date.now,
+			index: {
+				expires: 86400000
+			}
+		}
+	},
+	{
+		timestamps: true
+	}
+)
 
 const Token = mongoose.model('Token', tokenSchema)
 export { Token }
