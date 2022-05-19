@@ -22,7 +22,7 @@ const update = async (req, res, next) => {
 }
 const remove = async (req, res, next) => {
 	try {
-		const galery = await galeryServices.remove(req.params)
+		const galery = await galeryServices.remove(req.params.id)
 		res.status(200).json({ msg: 'La imagen se elimino.', data: galery })
 	} catch (error) {
 		res
