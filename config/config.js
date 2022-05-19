@@ -40,5 +40,9 @@ export default {
 	sentry: {
 		dsn: process.env.SENTRY_DSN
 	},
-	limitPagination: process.env.LIMIT_PAGINATION
+	limitPagination: process.env.LIMIT_PAGINATION,
+	nameApp: {
+		api: process.env.NAME_API,
+		app: process.env.NAME_APP
+	}
 }
