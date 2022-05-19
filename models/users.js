@@ -34,6 +34,9 @@ const usersSchema = new mongoose.Schema(
 			type: String,
 			required: [true, 'El numero de celular es requerido']
 		},
+		dateBirth: {
+			type: Date
+		},
 		roleId: {
 			type: Number,
 			ref: 'Roles'
