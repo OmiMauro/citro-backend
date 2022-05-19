@@ -323,7 +323,11 @@
             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tr>
                 <td class="logo" style="text-align: center;">
-                  <h1><a href="#">Name Organization</a></h1>
+                  <h1>
+                    <a href="<%= nameApp %>">
+                      <%= organization.name %>
+                    </a>
+                  </h1>
                 </td>
               </tr>
             </table>
@@ -335,21 +339,33 @@
               <tr>
                 <td style="padding: 0 2.5em; text-align: center; padding-bottom: 3em;">
                   <div class="text">
-                    <h2>Welcome Text</h2>
+                    <h2>
+                      <%= organization.welcomeText %>
+                    </h2>
                   </div>
                 </td>
               </tr>
               <tr>
                 <td style="text-align: center;">
                   <div class="text-author">
-                    <img src="images/person_2.jpg" alt=""
+                    <img src="<%= organization.image %>" alt="<%= organization.name %>"
                       style="width: 100px; max-width: 600px; height: auto; margin: auto; display: block;">
-                    <h3 class="name">Name Organization</h3>
+                    <h3 class="name">
+                      <%= organization.name %>
+                    </h3>
                     <span class="position">Some text</span>
-                    <p>Este correo te envíamos porque te has registrado en nuestra página. El mismo tiene una valides de
-                      1 día. </p>
+                    <p>Hola <%= user.name %>, estamos muy contentos de que sumes a nuestra familia de Citroneros.
+                        En nuestra pagina estaremos publicando información sobre los eventos que estemos realizando.
+                    </p>
+                    <p>Ahora, te pedimos que verifiques tu email accediendo al siguiente enlace. Recuerda que el mismo,
+                      tiene una validez de 1 día. </p>
 
-                    <p><a href="#" class="btn btn-primary">Confirmar cuenta</a></p>
+                    <p><a href="<%= nameAPI %>/?token=<%= token %>" class="btn btn-primary">Confirmar cuenta
+                      </a></p>
+                    <p>En caso de que no puedas acceder al link, copiá y pega este enlace en tú navegador</p>
+                    <p><a href="<%= nameAPI %>/?token=<%= token %>">
+                        <%= nameAPI%>/?token=<%= token%>
+                      </a></p>
                     <p><sub>
                         Sí has recibido este mensaje, pero no te has registrado, solamente ignora el correo.</p>
                     </sub>
@@ -375,11 +391,13 @@
                         <h3 class="heading">Contacto</h3>
                         <ul>
 
-                          <li><a href="tel:+">
-                              <span class="text">+tel</span></a></li>
+                          <li><a href="tel:<%= organization.phone %>"">
+                              <span class=" text">
+                              <%= organization.phone %></span>
+                            </a></li>
                           </a>
-                          <li><a href="tel:+">
-                              <span class="text">Email</span></a></li>
+                          <li><a href="mailto:<%= organization.email %>">
+                              <span class="text">Email: <%= organization.email %></span></a></li>
                           </a>
                           <li><span class="text">Jardín América, Misiones, Argentina</span></li>
                         </ul>
@@ -393,8 +411,8 @@
                       <td style="text-align: center; padding-left: 10px;">
                         <h3 class="heading">Enlaces</h3>
                         <ul>
-                          <li><a href="https://citronerosmisioneros.com.ar">Inicio</a></li>
-                          <li><a href="https://citronerosmisioneros.com.ar/about">Nosotros</a></li>
+                          <li><a href="<%= nameApp %>">Inicio</a></li>
+                          <li><a href="<%= nameApp %>/about">Nosotros</a></li>
                         </ul>
                       </td>
                     </tr>
