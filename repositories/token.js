@@ -1,4 +1,4 @@
-import { Token } from '../models/token'
+import { Token } from '../models/token.js'
 
 const getById = async (id) => {
 	return await Token.findById(id)
