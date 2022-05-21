@@ -353,18 +353,18 @@
                     <h3 class="name">
                       <%= organization.name %>
                     </h3>
-                    <span class="position">Some text</span>
+                    <span class="position"></span>
                     <p>Hola <%= user.name %>, estamos muy contentos de que sumes a nuestra familia de Citroneros.
                         En nuestra pagina estaremos publicando información sobre los eventos que estemos realizando.
                     </p>
                     <p>Ahora, te pedimos que verifiques tu email accediendo al siguiente enlace. Recuerda que el mismo,
                       tiene una validez de 1 día. </p>
 
-                    <p><a href="<%= nameAPI %>/?token=<%= token %>" class="btn btn-primary">Confirmar cuenta
+                    <p><a href="<%= nameApp %>/confirm-email/<%= token %>" class="btn btn-primary">Confirmar cuenta
                       </a></p>
                     <p>En caso de que no puedas acceder al link, copiá y pega este enlace en tú navegador</p>
-                    <p><a href="<%= nameAPI %>/?token=<%= token %>">
-                        <%= nameAPI%>/?token=<%= token%>
+                    <p><a href="<%= nameApp %>/confirm-email/<%= token %>">
+                        <%= nameApp %>/confirm-email/<%= token %>
                       </a></p>
                     <p><sub>
                         Sí has recibido este mensaje, pero no te has registrado, solamente ignora el correo.</p>
@@ -422,6 +422,11 @@
             </table>
           </td>
         </tr><!-- end: tr -->
+        <tr>
+          <td>
+            <p style="text-align: center;">Jardín América, Misiones, Argentina</p>
+          </td>
+        </tr>
         <tr>
           <td class="bg_light" style="text-align: center;">
             <p>No quieres recibir más estos email? Tú puedes <a href="#" style="color: rgba(0,0,0,.8);">Desuscribirte
