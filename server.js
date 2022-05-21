@@ -68,10 +68,10 @@ app.use((err, req, res, next) => {
 	}
 
 	if (err.validationError) {
-		return res.status(err.status).json(err.validationError)
+		return res.status(err.status).json({ errors: [err.validationError] })
 	}
 
-	res.status(err.status).json({ errors: err.message })
+	res.status(err.status).json({ errors: [err.message] })
 })
 
 export default app
