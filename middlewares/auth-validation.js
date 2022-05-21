@@ -3,13 +3,48 @@ import { check, param } from 'express-validator'
 import { name, lastname, image, id, email, phone } from './common-validation.js'
 
 const password = check('password')
-  .exists().withMessage('Contraseña requerdia').bail()
-  .isString().withMessage('Ingrese una cadena de caracteres').bail()
-  .notEmpty().withMessage('No puede ser vacio').bail()
+	.exists()
+	.withMessage('Contraseña requerdia')
+	.isString()
+	.withMessage('Ingrese una cadena de caracteres')
+	.notEmpty()
+	.withMessage('No puede ser vacio')
 
-const registerValidation = [name, lastname, email, password, phone, executeValidation]
+const token = param('token')
+	.exists()
+	.notEmpty()
+	.isString()
+	.withMessage('El token es requerido')
+const registerValidation = [
+	name,
+	lastname,
+	email,
+	password,
+	phone,
+	executeValidation
+]
 const loginValidation = [email, password, executeValidation]
-const updateValidation = [id, name, lastname, email, password, image, phone, executeValidation]
+const forgotPassValidation = [email, executeValidation]
+const resetPassValidation = [token, password, executeValidation]
+const verifyTokenValidation = [token, executeValidation]
+const updateValidation = [
+	id,
+	name,
+	lastname,
+	email,
+	password,
+	image,
+	phone,
+	executeValidation
+]
 const idValidation = [id, executeValidation]
 
-export { registerValidation, loginValidation, updateValidation, idValidation }
+export default {
+	registerValidation,
+	loginValidation,
+	updateValidation,
+	idValidation,
+	forgotPassValidation,
+	resetPassValidation,
+	verifyTokenValidation
+}
