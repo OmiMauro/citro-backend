@@ -1,9 +1,13 @@
 import rolesRepository from '../repositories/roles.js'
 import usersRepository from '../repositories/users.js'
+import tokenReponsitory from '../repositories/token.js'
+import organizationRepository from '../repositories/organizations.js'
+import config from '../config/config.js'
 import bcrypt from 'bcrypt'
-import { createToken } from '../modules/auth.js'
+import { createToken, verifyToken } from '../modules/auth.js'
 import { createTemplate } from '../modules/template-email.js'
 import { send } from '../modules/email.js'
+
 const register = async (body) => {
 	const { email, password, name, lastname, phone } = body
 	const emailExists = await isEmailExists(body.email)
@@ -25,19 +29,25 @@ const register = async (body) => {
 		error.status = 400
 		throw error
 	}
+	user.password = null
 	const token = await createToken({ email: user.email, _userId: user._id })
 	const persistedToken = await tokenReponsitory.create({
 		token,
 		_userId: user._id
 	})
+	const organization = await organizationRepository.getById(
+		config.organizationId
+	)
 	const headersEmail = {
 		to: user.email,
 		subject: 'Bienvenido',
-		html: createTemplate(user.email, 'welcomeEmailTemplate.ejs')
+		html: createTemplate(
+			{ organization, user, token },
+			'welcomeEmailTemplate.ejs'
+		)
 	}
 	const sendingEmail = await send(headersEmail)
 
-	user.password = null
 	return user
 }
 
@@ -57,7 +67,7 @@ const login = async (body) => {
 	}
 	if (!user.isVerified) {
 		const error = new Error(
-			'Su email aún no fue verificado. Por favor, verifique su casilla de emails'
+			'Su email aún no fue verificado. Por favor, verifique su casilla de emails.'
 		)
 		error.status = 403
 		throw error
@@ -69,7 +79,6 @@ const login = async (body) => {
 		name: user.name,
 		lastname: user.lastname
 	}
-
 	const token = createToken(payload)
 	return { token, user: { name: user.name, roleId: user.roleId } }
 }
@@ -77,14 +86,144 @@ const login = async (body) => {
 const getAll = async () => {
 	const users = await usersRepository.getAll()
 	if (!users) {
-		const error = new Error('No se puede encontrar los usuarios')
+		const error = new Error('No se encontraron usuarios')
 		error.status = 404
 		throw error
 	}
 	return users
 }
 
+const forgotPassword = async (body) => {
+	const user = await usersRepository.getByEmail(body.email)
+	if (!user) {
+		const error = new Error('El email ingresado no se encuentra registrado')
+		error.status = 404
+		throw error
+	}
+	const token = createToken({ email: user.email, _userId: user._id })
+	const tokenSaved = await tokenReponsitory.create({ _userId: user._id, token })
+	const organization = await organizationRepository.getById(
+		config.organizationId
+	)
+	const headersEmail = {
+		to: user.email,
+		subject: 'Resetear contraseña',
+		html: await createTemplate(
+			{
+				organization,
+				user,
+				token: token,
+				nameApp: config.nameApp.app
+			},
+			'forgotPasswordTemplate.ejs'
+		)
+	}
+	const sendEmail = await send(headersEmail)
+	return true
+}
 const isEmailExists = async (email) => await usersRepository.getByEmail(email)
 
-const confirmEmail = async (params) => {}
-export default { register, login, getAll, confirmEmail }
+const confirmEmail = async (token) => {
+	const decodedToken = await verifyToken(token)
+
+	if (!decodedToken) {
+		const error = new Error(
+			'El token ingresado no es valido. Solicite uno nuevo'
+		)
+		error.status = 400
+		throw error
+	}
+	const persistedToken = await tokenReponsitory.getToken({
+		token,
+		_userId: decodedToken._userId
+	})
+	if (!persistedToken) {
+		const error = new Error(
+			'El token ingresado no es valido. Por favor, solicite uno nuevo'
+		)
+		error.status = 404
+		throw error
+	}
+
+	const user = await usersRepository.getById(decodedToken._userId)
+	user.isVerified = true
+	await user.save()
+	await tokenReponsitory.remove(persistedToken._id)
+	return true
+}
+
+const resetPassword = async (token, body) => {
+	const { password } = body
+	const decodedToken = await verifyToken(token)
+
+	if (!decodedToken) {
+		const error = new Error(
+			'Solicite un nuevo código para restablecer su contraseña.'
+		)
+		error.status = 400
+		throw error
+	}
+	console.log(decodedToken)
+	const persistedToken = await tokenReponsitory.getToken({
+		token,
+		_userId: decodedToken._userId
+	})
+	if (!persistedToken) {
+		const error = new Error(
+			'El token ingresado no es valido. Por favor, solicite uno nuevo'
+		)
+		error.status = 400
+		throw error
+	}
+	const user = await usersRepository.getById(decodedToken._userId)
+	if (!user) {
+		const error = new Error('El usuario ')
+		error.status = 400
+		throw error
+	}
+	user.password = await bcrypt.hashSync(password, 9)
+	await user.save()
+	return true
+}
+
+const isValidToken = async (token) => {
+	const persistedToken = await tokenReponsitory.getToken({ token })
+	if (!persistedToken) {
+		const error = new Error(
+			'El token ingresado no es valido. Por favor, solicite uno nuevo'
+		)
+		error.status = 400
+		throw error
+	}
+	return true
+}
+export default {
+	register,
+	login,
+	getAll,
+	confirmEmail,
+	resetPassword,
+	isValidToken,
+	forgotPassword
+}
+
+/*  
+
+	const organization = await organizationRepository.getById(
+		config.organizationId
+	)
+	const headersEmail = {
+		to: user.email,
+		subject: 'Bienvenido',
+		html: await createTemplate(
+			{
+				organization,
+				user,
+				token:,
+				nameApp: config.nameApp.app,
+				nameAPI: config.nameApp.api
+			},
+			'welcomeEmailTemplate.ejs'
+		)
+	}
+	const sendingEmail = await send(headersEmail)*/
