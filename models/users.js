@@ -44,6 +44,10 @@ const usersSchema = new mongoose.Schema(
 		isVerified: {
 			type: Boolean,
 			default: false
+		},
+		token: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Token'
 		}
 	},
 	{
