@@ -5,7 +5,7 @@ const getById = async (id) => {
 }
 
 const getToken = async (query) => {
-	return await Token.findOne({ $where: query })
+	return await Token.findOne(query)
 }
 const create = async (token) => {
 	return await Token.create(token)
