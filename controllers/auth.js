@@ -30,9 +30,12 @@ const me = async (req, res, next) => {}
 const getAll = async (req, res, next) => {
 	try {
 		const users = await authServices.getAll()
-		res.status(200).json({ data: users })
+		return res.status(200).json({ data: users })
 	} catch (error) {
-		next(error)
+		return res.status(error.status).json({
+			errors: [{ msg: error.message }],
+			data: { ok: false }
+		})
 	}
 }
 const forgotPassword = async (req, res, next) => {
@@ -43,7 +46,6 @@ const forgotPassword = async (req, res, next) => {
 			data: { ok: true }
 		})
 	} catch (error) {
-		console.log(error)
 		return res.status(error.status).json({
 			errors: [{ msg: error.message }],
 			data: { ok: false }
@@ -53,7 +55,7 @@ const forgotPassword = async (req, res, next) => {
 
 const verifyToken = async (req, res, next) => {
 	try {
-		const res = await authServices.verifyToken(req.params.token)
+		const response = await authServices.isValidToken(req.params.token)
 		return res.status(200).json({
 			msg: 'Token valido',
 			data: { ok: true }
@@ -72,10 +74,10 @@ const resetPassword = async (req, res, next) => {
 			req.body
 		)
 		return res.status(200).json({
-			msg: 'Su contraseña fue reestablecida con éxito.'
+			msg: 'Su contraseña fue reestablecida con éxito.',
+			data: { ok: true }
 		})
 	} catch (error) {
-		console.log(erorr)
 		return res.status(error.status).json({
 			errors: [{ msg: error.message }],
 			data: { ok: false }
@@ -84,8 +86,10 @@ const resetPassword = async (req, res, next) => {
 }
 const confirmAccount = async (req, res, next) => {
 	try {
-		const resp = await authServices.confirmEmail(req.params.token)
-		return res.status(200).json({ msg: 'Su cuenta fue verificada con éxito' })
+		const response = await authServices.confirmEmail(req.params.token)
+		return res
+			.status(200)
+			.json({ msg: 'Su cuenta fue verificada con éxito', data: { ok: true } })
 	} catch (error) {
 		return res.status(error.status).json({
 			errors: [{ msg: error.message }],

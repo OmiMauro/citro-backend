@@ -41,13 +41,12 @@ const register = async (body) => {
 	const headersEmail = {
 		to: user.email,
 		subject: 'Bienvenido',
-		html: createTemplate(
-			{ organization, user, token },
+		html: await createTemplate(
+			{ organization, user, token, nameApp: config.nameApp.app },
 			'welcomeEmailTemplate.ejs'
 		)
 	}
 	const sendingEmail = await send(headersEmail)
-
 	return user
 }
 
@@ -125,11 +124,8 @@ const isEmailExists = async (email) => await usersRepository.getByEmail(email)
 
 const confirmEmail = async (token) => {
 	const decodedToken = await verifyToken(token)
-
 	if (!decodedToken) {
-		const error = new Error(
-			'El token ingresado no es valido. Solicite uno nuevo'
-		)
+		const error = new Error('El token ingresado no es valido.')
 		error.status = 400
 		throw error
 	}
@@ -147,7 +143,7 @@ const confirmEmail = async (token) => {
 
 	const user = await usersRepository.getById(decodedToken._userId)
 	user.isVerified = true
-	await user.save()
+	await usersRepository.update(user._id, user)
 	await tokenReponsitory.remove(persistedToken._id)
 	return true
 }
@@ -155,7 +151,6 @@ const confirmEmail = async (token) => {
 const resetPassword = async (token, body) => {
 	const { password } = body
 	const decodedToken = await verifyToken(token)
-
 	if (!decodedToken) {
 		const error = new Error(
 			'Solicite un nuevo código para restablecer su contraseña.'
@@ -163,30 +158,36 @@ const resetPassword = async (token, body) => {
 		error.status = 400
 		throw error
 	}
-	console.log(decodedToken)
 	const persistedToken = await tokenReponsitory.getToken({
 		token,
 		_userId: decodedToken._userId
 	})
 	if (!persistedToken) {
-		const error = new Error(
-			'El token ingresado no es valido. Por favor, solicite uno nuevo'
-		)
+		const error = new Error('El token ingresado ya fue utilizado')
 		error.status = 400
 		throw error
 	}
 	const user = await usersRepository.getById(decodedToken._userId)
 	if (!user) {
-		const error = new Error('El usuario ')
+		const error = new Error('El usuario no existe')
 		error.status = 400
 		throw error
 	}
 	user.password = await bcrypt.hashSync(password, 9)
-	await user.save()
+	await usersRepository.update(user._id, user)
+	await tokenReponsitory.remove(persistedToken._id)
 	return true
 }
 
 const isValidToken = async (token) => {
+	const decodedToken = await verifyToken(token)
+	if (!decodedToken) {
+		const error = new Error(
+			'Solicite un nuevo código para restablecer su contraseña.'
+		)
+		error.status = 400
+		throw error
+	}
 	const persistedToken = await tokenReponsitory.getToken({ token })
 	if (!persistedToken) {
 		const error = new Error(
@@ -206,24 +207,3 @@ export default {
 	isValidToken,
 	forgotPassword
 }
-
-/*  
-
-	const organization = await organizationRepository.getById(
-		config.organizationId
-	)
-	const headersEmail = {
-		to: user.email,
-		subject: 'Bienvenido',
-		html: await createTemplate(
-			{
-				organization,
-				user,
-				token:,
-				nameApp: config.nameApp.app,
-				nameAPI: config.nameApp.api
-			},
-			'welcomeEmailTemplate.ejs'
-		)
-	}
-	const sendingEmail = await send(headersEmail)*/
