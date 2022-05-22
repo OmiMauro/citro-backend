@@ -35,6 +35,8 @@ const register = async (body) => {
 		token,
 		_userId: user._id
 	})
+	user.token = persistedToken._id
+	await usersRepository.update(user._id, user)
 	const organization = await organizationRepository.getById(
 		config.organizationId
 	)
@@ -65,6 +67,33 @@ const login = async (body) => {
 		throw error
 	}
 	if (!user.isVerified) {
+		// Si el email del usuario no fue verificado y el token ya expiro, entonces se envia un nuevo token de confirmacion
+		if (!user.token) {
+			const token = createToken({ email: user.email, _userId: user._id })
+			const tokenSaved = await tokenReponsitory.create({
+				_userId: user._id,
+				token
+			})
+			user.token = tokenSaved._id
+			await usersRepository.update(user._id, user)
+			const organization = await organizationRepository.getById(
+				config.organizationId
+			)
+			const headersEmail = {
+				to: user.email,
+				subject: 'Confirmar email',
+				html: await createTemplate(
+					{
+						organization,
+						user,
+						token: token,
+						nameApp: config.nameApp.app
+					},
+					'welcomeEmailTemplate.ejs'
+				)
+			}
+			const sendEmail = await send(headersEmail)
+		}
 		const error = new Error(
 			'Su email aún no fue verificado. Por favor, verifique su casilla de emails.'
 		)
@@ -101,6 +130,8 @@ const forgotPassword = async (body) => {
 	}
 	const token = createToken({ email: user.email, _userId: user._id })
 	const tokenSaved = await tokenReponsitory.create({ _userId: user._id, token })
+	user.token = tokenSaved._id
+	await usersRepository.update(user._id, user)
 	const organization = await organizationRepository.getById(
 		config.organizationId
 	)
