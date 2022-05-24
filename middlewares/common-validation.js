@@ -1,7 +1,7 @@
 import { check, param } from 'express-validator'
 
 const id = param('id', 'Ingresar el id').exists().isMongoId()
-
+const id_number = param('id', 'Debe ingresar el id de la organizacion').isInt()
 const name = check('name')
 	.exists()
 	.withMessage('El nombre es requerido')
@@ -61,6 +61,7 @@ export {
 	name,
 	lastname,
 	id,
+	id_number,
 	image,
 	email,
 	phone,
