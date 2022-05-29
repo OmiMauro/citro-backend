@@ -32,7 +32,27 @@ const isAdmin = async (req, res, next) => {
 		next(error)
 	}
 }
-const isOwnUser = () => {}
+const isOwnUser = async (req, res, next) => {
+	try {
+		const token = getTokenPayload(req)
+		const user = await usersRepository.getById(token.userId)
+		if (!user) {
+			const error = new Error('No se encontro un usuario ')
+			error.status = 404
+			throw error
+		}
+		console.log(user)
+		console.log(token)
+		if (user._id === req.params.id) return next()
+
+		const error = new Error('No esta autorizado')
+		error.status = 403
+		throw error
+	} catch (error) {
+		console.log(error)
+		next(error)
+	}
+}
 
 const getTokenPayload = (req) => {
 	const tokenHeader = req.headers.authorization
