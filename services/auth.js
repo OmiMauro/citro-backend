@@ -108,7 +108,10 @@ const login = async (body) => {
 		lastname: user.lastname
 	}
 	const token = createToken(payload)
-	return { token, user: { name: user.name, roleId: user.roleId } }
+	return {
+		token,
+		user: { name: user.name, roleId: user.roleId, userId: user._id }
+	}
 }
 
 const getAll = async () => {
