@@ -41,13 +41,12 @@ const isOwnUser = async (req, res, next) => {
 			error.status = 404
 			throw error
 		}
-		console.log(user)
-		console.log(token)
-		if (user._id === req.params.id) return next()
-
-		const error = new Error('No esta autorizado')
-		error.status = 403
-		throw error
+		if (token.userId !== req.params.id) {
+			const error = new Error('No esta autorizado')
+			error.status = 403
+			throw error
+		}
+		next()
 	} catch (error) {
 		console.log(error)
 		next(error)
