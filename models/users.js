@@ -35,7 +35,8 @@ const usersSchema = new mongoose.Schema(
 			required: [true, 'El numero de celular es requerido']
 		},
 		dateBirth: {
-			type: Date
+			type: Date,
+			required: [true, 'Ingrese la fecha de nacimiento']
 		},
 		roleId: {
 			type: Number,
@@ -48,6 +49,10 @@ const usersSchema = new mongoose.Schema(
 		token: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Token'
+		},
+		_carId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Cars'
 		}
 	},
 	{
