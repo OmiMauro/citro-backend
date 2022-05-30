@@ -10,7 +10,7 @@ import news from './news.js'
 import organizations from './organization.js'
 import slides from './slides.js'
 import users from './users.js'
-
+import events from './events.js'
 const indexRouter = Express.Router()
 
 indexRouter.use('/activities', activities)
@@ -22,7 +22,7 @@ indexRouter.use('/members', members)
 indexRouter.use('/news', news)
 indexRouter.use('/organizations', organizations)
 indexRouter.use('/slides', slides)
-
+indexRouter.use('/events', events)
 indexRouter.use('/users', users)
 
 export { indexRouter }
