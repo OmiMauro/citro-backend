@@ -41,7 +41,11 @@ const eventsSchema = new mongoose.Schema(
 				day: Date,
 				times: String
 			}
-		]
+		],
+		image_id: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Images'
+		}
 	},
 	{
 		timestamps: true,
