@@ -1,7 +1,7 @@
 import { Users } from '../models/users.js'
 
 const getById = async (id) => {
-	return await Users.findById(id)
+	return await Users.findById(id).populate('image_id')
 }
 const update = async (id, user) => {
 	return await Users.findByIdAndUpdate(id, user)
@@ -10,7 +10,7 @@ const create = async (user) => {
 	return await Users.create(user)
 }
 const getAll = async () => {
-	return await Users.find({})
+	return await Users.find({}).populate('image_id')
 }
 const getByEmail = async (email) => {
 	const exists = await Users.exists({ email })
