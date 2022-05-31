@@ -1,3 +1,4 @@
+import paranoidMongoose from '@abslibs/mongoose-plugin'
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 const usersSchema = new mongoose.Schema(
@@ -59,6 +60,9 @@ const usersSchema = new mongoose.Schema(
 		timestamps: true
 	}
 )
+usersSchema.plugin(paranoidMongoose, {
+	paranoid: true
+})
 
 usersSchema.plugin(uniqueValidator)
 const Users = mongoose.model('Users', usersSchema)

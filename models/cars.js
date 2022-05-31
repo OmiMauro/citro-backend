@@ -1,3 +1,4 @@
+import paranoidMongoose from '@abslibs/mongoose-plugin'
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 const carsSchema = new Schema(
@@ -29,6 +30,8 @@ const carsSchema = new Schema(
 		versionKey: false
 	}
 )
-
+carsSchema.plugin(paranoidMongoose, {
+	paranoid: true
+})
 const Cars = mongoose.model('Cars', carsSchema)
 export default Cars

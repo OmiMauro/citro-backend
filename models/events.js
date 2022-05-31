@@ -1,3 +1,4 @@
+import paranoidMongoose from '@abslibs/mongoose-plugin'
 import mongoose from 'mongoose'
 
 const eventsSchema = new mongoose.Schema(
@@ -53,5 +54,8 @@ const eventsSchema = new mongoose.Schema(
 	}
 )
 
+eventsSchema.plugin(paranoidMongoose, {
+	paranoid: true
+})
 const Events = mongoose.model('Events', eventsSchema)
 export default Events

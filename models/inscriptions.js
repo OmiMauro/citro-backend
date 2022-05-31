@@ -1,3 +1,4 @@
+import paranoidMongoose from '@abslibs/mongoose-plugin'
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
@@ -40,7 +41,9 @@ const inscriptionsSchema = new Schema(
 		timestamps: true
 	}
 )
-
+inscriptionsSchema.plugin(paranoidMongoose, {
+	paranoid: true
+})
 const Inscriptions = mongoose.model('Inscriptions', inscriptionsSchema)
 
 export default Inscriptions
