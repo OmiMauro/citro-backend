@@ -1,3 +1,4 @@
+import cloudinary from '../modules/cloudinary.js'
 import filesModule from '../modules/files.js'
 import eventsRepository from '../repositories/events.js'
 import imagesRepository from '../repositories/images.js'
@@ -46,7 +47,7 @@ const create = async (body, imageFile) => {
 		await filesModule.deleteLocalFile(imageFile)
 	}
 	const image = await imagesRepository.create(imageUpload)
-	event.image_id = image._id
+	body.image_id = image._id
 	const event = await eventsRepository.create(body)
 	if (!event) {
 		await cloudinary.deleteFile(image._id)
@@ -54,7 +55,6 @@ const create = async (body, imageFile) => {
 		error.status = 400
 		throw error
 	}
-	organization
 	return event
 }
 const getAll = async () => {
@@ -67,6 +67,19 @@ const getAll = async () => {
 	return events
 }
 const remove = async (id) => {
+	const event = await eventsRepository.getById(id)
+	if (!event) {
+		const error = new Error('No se encontro el evento')
+		error.status = 404
+		throw error
+	}
+	const fileRemove = await cloudinary.deleteFile(event.image_id)
+	if (!fileRemove) {
+		const error = new Error('Ocurrio un error al eliminar la imagen.')
+		error.status = 400
+		throw error
+	}
+	const imageRemove = await imagesRepository.remove(event.image_id)
 	const event = await eventsRepository.remove(id)
 	if (!event) {
 		const error = new Error('No se pudo eliminar el evento')
