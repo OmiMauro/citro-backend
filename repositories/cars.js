@@ -1,4 +1,4 @@
-import { Cars } from '../models/cars.js'
+import Cars from '../models/cars.js'
 
 const getById = async (id) => {
   return await Cars.findById(id)
