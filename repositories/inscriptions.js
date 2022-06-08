@@ -1,5 +1,4 @@
-
-import { Inscriptions } from '../models/inscriptions.js'
+import Inscriptions from '../models/inscriptions.js'
 
 const getById = async (id) => {
   return await Inscriptions.findById(id)
