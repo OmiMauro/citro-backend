@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const paysSchema = new mongoose.Schema(
   {
-    modifiedBy: {
+    _modifiedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Users',
     },

@@ -1,10 +1,12 @@
 import Pays from '../models/pays.js'
 
 const getById = async (id) => {
-  return await Pays.findById(id)
+  return await Pays.findById(id).populate('_modifiedBy', 'name lastname')
 }
 const update = async (id, pay) => {
-  return await Pays.findByIdAndUpdate(id, pay)
+  return await Pays.findByIdAndUpdate(id, pay, { new: true }).populate(
+    '_modifiedBy name lastname'
+  )
 }
 const create = async (pay) => {
   return await Pays.create(pay)
@@ -12,7 +14,5 @@ const create = async (pay) => {
 const getAll = async () => {
   return await Pays.find({})
 }
-const remove = async (id) => {
-  return await Pays.findByIdAndRemove(id)
-}
-export default { getById, update, create, getAll, remove }
+
+export default { getById, update, create, getAll }
