@@ -29,14 +29,6 @@ const eventsSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    hotels: [
-      {
-        name: String,
-        phone: String,
-        url: String,
-        location: String,
-      },
-    ],
     chronogram: [
       {
         day: Date,
