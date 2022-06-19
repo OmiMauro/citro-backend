@@ -11,8 +11,13 @@ const isAuth = async (req, res, next) => {
     if (!user) {
       return res.status(403).json({ errors: [{ msg: 'Token no valido' }] })
     }
-    user.password = ''
-    req.authUser = user
+    const authUser = user.toObject()
+    delete authUser['token']
+    delete authUser['password']
+    delete authUser['deleted']
+    delete authUser['deletedAt']
+    delete authUser['inscriptionId']
+    req.authUser = authUser
     next()
   } catch (error) {
     return res.status(error.status).json({ errors: [{ msg: error.message }] })
