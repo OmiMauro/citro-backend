@@ -20,12 +20,6 @@ router.post(
 )
 router.get('/:id', idValidation, eventsController.getById)
 router.put('/:id', isAuth, isAdmin, updateValidation, eventsController.update)
-router.patch(
-  '/:id/hotel/:hotelId',
-  isAuth,
-  isAdmin,
-  eventsController.updateHotelById
-)
 
 router.patch(
   '/:id/image',
@@ -36,5 +30,27 @@ router.patch(
   eventsController.updateImage
 )
 router.delete('/:id', idValidation, isAuth, isAdmin, eventsController.remove)
+
+router.post(
+  '/:id/chronogram',
+  isAuth,
+  isAdmin,
+  /* createChronogramValidation, */
+  eventsController.createChronogram
+)
+router.put(
+  '/:id/chronogram/:chronogramId',
+  isAuth,
+  isAdmin,
+  idValidation,
+  eventsController.updateChronogram
+)
+router.delete(
+  '/:id/chronogram/:chronogramId',
+  isAuth,
+  isAdmin,
+  idValidation,
+  eventsController.removeChronogram
+)
 
 export default router

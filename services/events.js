@@ -95,19 +95,65 @@ const remove = async (id) => {
   }
   return eventRemoved
 }
-const updateHotelById = async (params, body) => {
-  const event = await eventsRepository.getById(params.id)
+
+const createChronogram = async (id, body) => {
+  const event = await eventsRepository.getById(id)
   if (!event) {
     const error = new Error('No se encontro un evento con el ID')
     error.status = 404
     throw error
   }
-  const updatedEvent = await eventsRepository.updateSubdocument(
-    { _id: params.id, subDocID: params.subDocID },
-    'hotels',
+  const chronogram = await eventsRepository.createChronogram(id, body)
+  if (!chronogram) {
+    const error = new Error('No se pudo agregar el cronograma')
+    error.status = 404
+    throw error
+  }
+  return chronogram
+}
+const updateChronogram = async ({ _eventId, _chronogramId }, body) => {
+  const event = await eventsRepository.getByFields({
+    _id: _eventId,
+    [chronogram._id]: _chronogramId,
+  })
+  if (!event) {
+    const error = new Error('No se encontro un evento con el ID')
+    error.status = 404
+    throw error
+  }
+  const updatedChronogram = await eventsRepository.updateChronogram(
+    { _eventId, _chronogramId },
     body
   )
-  return updatedEvent
+  if (!updatedChronogram) {
+    const error = new Error('No se pudo actualizar el cronograma')
+    error.status = 404
+    throw error
+  }
+  return updatedChronogram
+}
+const removeChronogram = async (params) => {
+  const { _eventId, _chronogramId } = params
+  const event = await eventsRepository.getByFields({
+    _id: _eventId,
+    'chronogram._id': _chronogramId,
+  })
+  console.log(event)
+  if (!event) {
+    const error = new Error('No se encontro un evento con el ID')
+    error.status = 404
+    throw error
+  }
+  const chronogram = await eventsRepository.removeChronogram({
+    _eventId,
+    _chronogramId,
+  })
+  if (!event) {
+    const error = new Error('No se puede eliminar el cronograma')
+    error.status = 404
+    throw error
+  }
+  return chronogram
 }
 
 export default {
@@ -117,5 +163,7 @@ export default {
   create,
   getAll,
   remove,
-  updateHotelById,
+  createChronogram,
+  updateChronogram,
+  removeChronogram,
 }

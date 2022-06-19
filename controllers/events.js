@@ -71,13 +71,46 @@ const updateImage = async (req, res, next) => {
   }
 }
 
-const updateHotelById = async (req, res, next) => {
+const createChronogram = async (req, res) => {
   try {
-    const hotel = await eventsServices.updateHotelById(req.params, req.body)
+    const event = await eventsServices.createChronogram(req.params.id, req.body)
     return res
       .status(200)
-      .json({ data: hotel, msg: 'Se actualizo el hotel con éxito' })
+      .json({ data: event, msg: 'Se agrego el cronograma con éxito' })
   } catch (error) {
+    return res
+      .status(error.status)
+      .json({ errors: [{ msg: error.message }], data: false })
+  }
+}
+
+const updateChronogram = async (req, res) => {
+  try {
+    const event = await eventsServices.updateChronogram(
+      { _eventId: req.params.id, _chronogramId: req.params.chronogramId },
+      req.body
+    )
+    return res
+      .status(200)
+      .json({ data: hotel, msg: 'Se actualizo el cronograma con éxito' })
+  } catch (error) {
+    return res
+      .status(error.status)
+      .json({ errors: [{ msg: error.message }], data: false })
+  }
+}
+const removeChronogram = async (req, res) => {
+  try {
+    console.log(req.params)
+    const event = await eventsServices.removeChronogram({
+      _eventId: req.params.id,
+      _chronogramId: req.params.chronogramId,
+    })
+    return res
+      .status(200)
+      .json({ data: event, msg: 'Se elimino el cronograma con éxito' })
+  } catch (error) {
+    console.log(error)
     return res
       .status(error.status)
       .json({ errors: [{ msg: error.message }], data: false })
@@ -90,5 +123,7 @@ export default {
   getAll,
   getById,
   updateImage,
-  updateHotelById,
+  createChronogram,
+  updateChronogram,
+  removeChronogram,
 }
