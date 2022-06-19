@@ -47,7 +47,7 @@ const usersSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    token: {
+    _tokenId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Token',
     },
