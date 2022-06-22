@@ -1,7 +1,10 @@
 import Events from '../models/events.js'
 
 const getById = async (id) => {
-  return await Events.findById(id, '-deleted -deletedAt -createdAt -updatedAt')
+  return await Events.findById(
+    id,
+    '-deleted -deletedAt -createdAt -updatedAt'
+  ).populate('image_id')
 }
 const update = async (id, event) => {
   return await Events.findByIdAndUpdate(id, event, { new: true })
@@ -12,6 +15,7 @@ const create = async (event) => {
 }
 const getAll = async () => {
   return await Events.find({}, '-deleted -deletedAt -createdAt -updatedAt')
+    .sort({ createdAt: '-1' })
     .populate('image_id')
     .populate('chronogram')
     .lean()
