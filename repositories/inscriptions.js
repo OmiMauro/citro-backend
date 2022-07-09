@@ -9,12 +9,19 @@ const update = async (id, inscription) => {
 const create = async (inscription) => {
   return await Inscriptions.create(inscription)
 }
-const getAll = async (_eventId) => {
-  return await Inscriptions.find({ _eventId })
-    .populate('_payId')
-    .populate('_userId', 'name lastname')
-    .populate('_eventId', 'name')
-    .lean()
+const getAll = async (_eventId, page = 1, limit = 10) => {
+  return await Inscriptions.paginate(
+    { _eventId },
+    {
+      page,
+      limit,
+      populate: [
+        { path: '_eventId', select: 'name' },
+        { path: '_userId', select: 'name lastname' },
+        { path: '_payId' },
+      ],
+    }
+  )
 }
 const existsInscription = async (_eventId, _userId) => {
   return await Inscriptions.find({ _eventId, _userId })

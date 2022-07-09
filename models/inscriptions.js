@@ -1,7 +1,8 @@
 import paranoidMongoose from '@abslibs/mongoose-plugin'
+import mongoosePaginate from 'mongoose-paginate'
 import mongoose from 'mongoose'
-const Schema = mongoose.Schema
 
+const Schema = mongoose.Schema
 const inscriptionsSchema = new Schema(
   {
     _userId: {
@@ -44,6 +45,12 @@ const inscriptionsSchema = new Schema(
 inscriptionsSchema.plugin(paranoidMongoose, {
   paranoid: true,
 })
+
+mongoosePaginate.paginate.options = {
+  lean: true,
+  limit: 10,
+}
+inscriptionsSchema.plugin(mongoosePaginate)
 const Inscriptions = mongoose.model('Inscriptions', inscriptionsSchema)
 
 export default Inscriptions
