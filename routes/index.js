@@ -10,6 +10,7 @@ import slides from './slides.js'
 import users from './users.js'
 import events from './events.js'
 import pays from './pays.js'
+import orders from './orders.js'
 const indexRouter = Express.Router()
 
 indexRouter.use('/auth', auth)
@@ -22,4 +23,6 @@ indexRouter.use('/slides', slides)
 indexRouter.use('/events', events)
 indexRouter.use('/users', users)
 indexRouter.use('/pays', pays)
+indexRouter.use('/orders', orders)
+
 export { indexRouter }
