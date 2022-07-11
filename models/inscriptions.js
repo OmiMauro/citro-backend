@@ -32,9 +32,9 @@ const inscriptionsSchema = new Schema(
       trim: true,
       uppercase: true,
     },
-    travelPeople: {
-      type: Number,
-      default: 0,
+    _orderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Orders',
     },
   },
   {
