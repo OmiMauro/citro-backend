@@ -12,24 +12,9 @@ const locationOrigin = check('locationOrigin')
   .exists()
   .withMessage('Ingrese la localidad de origen')
   .isString()
-const travelPeople = check('travelPeople')
-  .exists()
-  .withMessage('Ingrese la cantidad de acompañantes')
-  .isInt()
 
-const createValidation = [
-  provinceOrigin,
-  locationOrigin,
-  travelPeople,
-  executeValidation,
-]
-const updateValidation = [
-  id,
-  provinceOrigin,
-  locationOrigin,
-  travelPeople,
-  executeValidation,
-]
+const createValidation = [provinceOrigin, locationOrigin, executeValidation]
+const updateValidation = [id, provinceOrigin, locationOrigin, executeValidation]
 
 const getAllValidation = [eventId, executeValidation]
 const idValidation = [id, executeValidation]
