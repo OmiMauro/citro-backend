@@ -1,7 +1,7 @@
 import Inscriptions from '../models/inscriptions.js'
 
 const getById = async (id) => {
-  return await Inscriptions.findById(id).populate('_payId').lean()
+  return await Inscriptions.findById(id).populate('_orderId').lean()
 }
 const update = async (id, inscription) => {
   return await Inscriptions.findByIdAndUpdate(id, inscription, { new: true })

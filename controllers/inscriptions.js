@@ -3,13 +3,14 @@ import inscriptionsService from '../services/inscriptions.js'
 const create = async (req, res) => {
   try {
     const inscription = await inscriptionsService.create(
-      req.authUser._id,
+      req.authUser,
       req.params.eventId,
       req.body
     )
-    return res
-      .status(201)
-      .json({ msg: 'Se agrego exitosamente la inscripción', data: inscription })
+    return res.status(201).json({
+      msg: 'Se agrego exitosamente la inscripción',
+      data: inscription,
+    })
   } catch (error) {
     res
       .status(error.status)
