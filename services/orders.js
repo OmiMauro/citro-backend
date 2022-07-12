@@ -1,41 +1,93 @@
 import ordersRepository from '../repositories/orders.js'
-import mpModule from '../modules/mercadopago.js'
+import inscriptionsRepository from '../repositories/inscriptions.js'
+import mercadoPago from '../modules/mercadopago.js'
 
-const createPreference = async () => {
-  const preference = await mpModule.createPreference({})
+const create = async (user, inscriptionId) => {
+  let inscription = await inscriptionsRepository.getById(inscriptionId)
+  if (!inscription) {
+    const error = new Error('No se encontró una inscripcion con el ID')
+    error.status = 404
+    throw error
+  }
+  let order = await ordersRepository.create()
+  if (!order) {
+    const error = new Error('No se pudo agregar la orden.')
+    error.status = 400
+    throw error
+  }
+  let preference = {
+    external_reference: order._id.toString(),
+    statement_descriptor: `Inscripción DNI: ${user.DNI}`,
+    items: [
+      {
+        title: `DNI: ${user.DNI}`,
+        unit_price: inscription.unitPrice,
+        quantity: 1,
+        currency_id: 'ARS',
+        description: `Inscripción DNI: ${user.DNI}`,
+      },
+    ],
+    /* payer: {
+      name: user.name,
+      surname: user.lastname,
+      email: user.email,
+      identification: {
+        type: 'DNI',
+        number: user.DNI,
+      },
+    }, */
+    expires: true,
+  }
+  const orderMercadoPago = await mercadoPago.createPreference(preference)
+  if (!orderMercadoPago) {
+    const error = new Error('No se pudo crear la orden de pago de MP')
+    error.status = 400
+    throw error
+  }
+  order = await ordersRepository.update(order._id, orderMercadoPago.body)
+  if (!order) {
+    const error = new Error('No se pudo actualizar la orden.')
+    error.status = 400
+    throw error
+  }
+  inscription = await inscriptionsRepository.update(inscription._id, {
+    _orderId: order._id,
+  })
+  return order
 }
-const updatePayment = async () => {}
 
-const getPayment = async () => {}
-export default { createPreference, updatePayment, getPayment }
-/* const preference = await mercadopago.preferences.create({
-  external_reference: orderSaved._id.toString(),
-  statement_descriptor,
-  notification_url: `${process.env.NAME_APPLICATION}/api/mercadopago/webhook?source_news=webhooks`,
-  back_urls: {
-    success: `${process.env.NAME_APPLICATION}/success`,
-    pending: `${process.env.NAME_APPLICATION}/pending`,
-    failure: `${process.env.NAME_APPLICATION}/rejected`,
-  },
-  items: [
-    {
-      title: `DNI: ${DNI}`,
-      unit_price,
-      quantity: 1,
-      currency_id: 'ARS',
-      description: `Inscripción para el encuentro de Citroen del DNI: ${DNI}`,
-    },
-  ],
-  payer: {
-    name: name,
-    surname: lastname,
-    email: email,
-    identification: {
-      type: 'DNI',
-      number: DNI,
-    },
-  },
-  expires: true,
-  date_of_expiration: '2021-11-20T00:00:00.000-04:00',
-})
+const update = async (id) => {
+  const payment = await mercadopago.getPayment(id)
+  if (payment.statusText !== 'OK') {
+    const error = new Error('No se encontro la orden con el ID')
+    error.status = 404
+    throw error
+  }
+  const orderId = payment.data.external_reference
+
+  let order = await ordersRepository.getById(orderId)
+  /*  if (!order) {
+    const error = new Error('No se encontro la orden con el ID')
+    error.status = 404
+    throw error
+  }
  */
+  order = await ordersRepository.update(orderId, payment.data)
+  if (!order) {
+    const error = new Error('No se pudo actualizar la orden')
+    error.status = 400
+    throw error
+  }
+  return order
+}
+
+const getById = async (id) => {
+  const order = await ordersRepository.getById(id)
+  if (!order) {
+    const error = new Error('No se encontro la orden con el ID')
+    error.status = 404
+    throw error
+  }
+  return order
+}
+export default { create, update, getById }

@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema(
     date_created: { type: Date },
     date_approved: { type: Date },
     date_last_updated: { type: Date },
-
+    last_updated: { type: Date },
     collector_id: { type: Number },
     transaction_amount: { type: Number },
     transaction_amount_refunded: { type: Number },

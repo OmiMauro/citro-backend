@@ -1,12 +1,16 @@
 import ordersServices from '../services/orders.js'
 
-const createPreference = async (req, res, next) => {
+const create = async (req, res) => {
   try {
-    const preference = await ordersServices.createPreference(req)
+    const order = await ordersServices.create(
+      req.authUser,
+      req.params.inscriptionId
+    )
     return res
       .status(201)
-      .json({ msg: 'Se creó la preferencia con éxito', data: preference })
+      .json({ msg: 'Ingrese a la URL para realizar el pago', data: order })
   } catch (error) {
+    console.log(error)
     res.status(error.status).json({
       errors: [{ msg: error.message }],
       data: false,
@@ -15,13 +19,10 @@ const createPreference = async (req, res, next) => {
 }
 const webhook = async (req, res) => {
   try {
-    res.status(200).end()
     if (req.query.type === 'payment') {
-      const id = req.query['data.id']
-      const findPay = await findPayMP(id)
-      if (findPay.statusText === 'OK') {
-        await updateOrderDB(findPay)
-      }
+      res.status(200).end()
+      let id = req.query[data.id]
+      const order = await ordersServices.update(id, query)
     }
   } catch (error) {
     return res.status(error.status).json({
@@ -30,39 +31,24 @@ const webhook = async (req, res) => {
     })
   }
 }
-export default { createPreference, webhook }
-
-const updateOrderDB = async (findPay) => {
-  const {
-    id,
-    date_created,
-    date_last_updated,
-    date_approved,
-    status,
-    status_detail,
-    external_reference,
-    transaction_amount_refunded,
-    operation_type,
-    payment_type_id,
-  } = findPay.data
-  const { net_received_amount, total_paid_amount } =
-    findPay.data.transaction_details
-  const objectId = mongoose.Types.ObjectId(external_reference)
-  const netoRecivido = net_received_amount - transaction_amount_refunded
-  const findOrderAndUpdate = await OrderMP.findByIdAndUpdate(
-    { _id: objectId },
-    {
-      id_Operacion: id,
-      date_created,
-      date_last_updated,
-      date_approved,
-      status,
-      status_detail,
-      net_received_amount: netoRecivido,
-      total_paid_amount,
-      operation_type,
-      payment_type_id,
-      transaction_amount_refunded,
-    }
-  )
+const getById = async (req, res) => {
+  try {
+    const order = await ordersServices.get(req.params.orderId)
+    return res.status(201).json({
+      data: order,
+    })
+  } catch (error) {
+    res.status(error.status).json({
+      errors: [{ msg: error.message }],
+      data: false,
+    })
+  }
 }
+export default { create, webhook, getById }
+/* if (req.query.type === 'payment') {
+      const id = req.query['data.id']
+      const findPay = await findPayMP(id)
+      if (findPay.statusText === 'OK') {
+        await updateOrderDB(findPay)
+      }
+    } */
