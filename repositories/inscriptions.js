@@ -9,7 +9,7 @@ const update = async (id, inscription) => {
 const create = async (inscription) => {
   return await Inscriptions.create(inscription)
 }
-const getAll = async (_eventId, page = 1, limit = 10) => {
+const getAll = async (_eventId, { page = 1, limit = 10 }) => {
   return await Inscriptions.paginate(
     { _eventId },
     {
@@ -18,7 +18,7 @@ const getAll = async (_eventId, page = 1, limit = 10) => {
       populate: [
         { path: '_eventId', select: 'name' },
         { path: '_userId', select: 'name lastname' },
-        { path: '_payId' },
+        { path: '_orderId' },
       ],
     }
   )

@@ -1,6 +1,9 @@
 import eventsRespository from '../repositories/events.js'
 import inscriptionsRepository from '../repositories/inscriptions.js'
 import paysRepository from '../repositories/pays.js'
+import ordersRepository from '../repositories/orders.js'
+import mercadopago from '../modules/mercadopago.js'
+import ordersServices from './orders.js'
 
 const getById = async (id) => {
   const inscription = await inscriptionsRepository.getById(id)

@@ -35,10 +35,12 @@ const update = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const inscriptions = await inscriptionsService.getAll(req.params.eventId)
+    const inscriptions = await inscriptionsService.getAll(
+      req.params.eventId,
+      req.query
+    )
     res.status(201).json({ data: inscriptions })
   } catch (error) {
-    console.log(error)
     res
       .status(error.status)
       .json({ errors: [{ msg: error.message }], data: false })
