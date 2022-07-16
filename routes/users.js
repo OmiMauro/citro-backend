@@ -5,26 +5,32 @@ import { isOwnUser, isAdmin, isAuth } from '../middlewares/auth.js'
 
 const router = Express.Router()
 router.get(
-	'/:id',
-	isAuth,
-	isOwnUser,
-	authValidation.idValidation,
-	usersController.getById
+  '/:id',
+  isAuth,
+  isOwnUser,
+  authValidation.idValidation,
+  usersController.getById
 )
 router.put(
-	'/:id',
-	isAuth,
-	isOwnUser,
-	authValidation.updateValidation,
-	usersController.update
+  '/:id',
+  isAuth,
+  isOwnUser,
+  authValidation.updateValidation,
+  usersController.update
 )
 router.delete(
-	'/:id',
-	isAuth,
-	isAdmin,
-	isOwnUser,
-	authValidation.idValidation,
-	usersController.remove
+  '/:id',
+  isAuth,
+  isAdmin,
+  isOwnUser,
+  authValidation.idValidation,
+  usersController.remove
 )
-
+router.patch(
+  '/:id',
+  isAuth,
+  isOwnUser,
+  authValidation.updatePasswordValidation,
+  usersController.updatePassword
+)
 export default router

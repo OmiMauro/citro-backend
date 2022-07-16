@@ -1,5 +1,5 @@
 import usersRepository from '../repositories/users.js'
-
+import bcrypt from 'bcrypt'
 const getById = async (id) => {
   const user = await usersRepository.getById(id)
   if (!user) {
@@ -38,4 +38,14 @@ const remove = async (id) => {
 const comparePassword = async () => {}
 const checkPasswords = async () => {}
 
-export default { getById, update, remove }
+const updatePassword = async (id, body) => {
+  const password = await bcrypt.hashSync(body.password, 9)
+  const user = await usersRepository.update(id, { password })
+  if (!user) {
+    const error = new Error('No se pudo actualizar la contraseña')
+    error.status = 400
+    throw error
+  }
+  return true
+}
+export default { getById, update, remove, updatePassword }

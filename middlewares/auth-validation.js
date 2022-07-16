@@ -40,6 +40,7 @@ const updateValidation = [
   dateBirth,
   executeValidation,
 ]
+const updatePasswordValidation = [id, password, executeValidation]
 const idValidation = [id, executeValidation]
 
 export default {
@@ -50,4 +51,5 @@ export default {
   forgotPassValidation,
   resetPassValidation,
   verifyTokenValidation,
+  updatePasswordValidation,
 }

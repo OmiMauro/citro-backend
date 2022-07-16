@@ -13,6 +13,20 @@ const update = async (req, res, next) => {
     })
   }
 }
+const updatePassword = async (req, res, next) => {
+  try {
+    const user = await usersServices.updatePassword(req.params.id, req.body)
+    return res
+      .status(201)
+      .json({ msg: 'La contraseña se actualizó con éxito.' })
+  } catch (error) {
+    console.log(error)
+    res.status(error.status).json({
+      errors: [{ msg: error.message }],
+      data: false,
+    })
+  }
+}
 const remove = async (req, res, next) => {
   try {
     const user = await usersServices.remove(req.params.id)
@@ -37,4 +51,4 @@ const getById = async (req, res, next) => {
   }
 }
 
-export default { update, remove, getById }
+export default { update, remove, getById, updatePassword }
