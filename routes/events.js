@@ -52,5 +52,12 @@ router.delete(
   idValidation,
   eventsController.removeChronogram
 )
+router.get(
+  '/:id/inscriptions',
+  isAuth,
+  isAdmin,
+  idValidation,
+  eventsController.getAllInscriptions
+)
 
 export default router

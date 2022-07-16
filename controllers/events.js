@@ -37,12 +37,26 @@ const remove = async (req, res, next) => {
 }
 const getAll = async (req, res, next) => {
   try {
-    const events = await eventsServices.getAll()
+    const events = await eventsServices.getAll(req.params.eventId)
     return res.status(200).json({
       data: events,
     })
   } catch (error) {
-    console.log(error)
+    return res
+      .status(error.status)
+      .json({ errors: [{ msg: error.message }], data: false })
+  }
+}
+const getAllInscriptions = async (req, res) => {
+  try {
+    const inscriptions = await eventsServices.getAllInscriptions(
+      req.params.id,
+      req.query
+    )
+    return res.status(200).json({
+      data: inscriptions,
+    })
+  } catch (error) {
     return res
       .status(error.status)
       .json({ errors: [{ msg: error.message }], data: false })
@@ -101,7 +115,6 @@ const updateChronogram = async (req, res) => {
 }
 const removeChronogram = async (req, res) => {
   try {
-    console.log(req.params)
     const event = await eventsServices.removeChronogram({
       _eventId: req.params.id,
       _chronogramId: req.params.chronogramId,
@@ -110,7 +123,6 @@ const removeChronogram = async (req, res) => {
       .status(200)
       .json({ data: event, msg: 'Se elimino el cronograma con éxito' })
   } catch (error) {
-    console.log(error)
     return res
       .status(error.status)
       .json({ errors: [{ msg: error.message }], data: false })
@@ -126,4 +138,5 @@ export default {
   createChronogram,
   updateChronogram,
   removeChronogram,
+  getAllInscriptions,
 }

@@ -1,9 +1,8 @@
-import { body } from 'express-validator'
 import cloudinary from '../modules/cloudinary.js'
 import filesModule from '../modules/files.js'
 import eventsRepository from '../repositories/events.js'
 import imagesRepository from '../repositories/images.js'
-
+import inscriptionsRepository from '../repositories/inscriptions.js'
 const getById = async (id) => {
   const event = await eventsRepository.getById(id)
   if (!event) {
@@ -138,7 +137,6 @@ const removeChronogram = async (params) => {
     _id: _eventId,
     'chronogram._id': _chronogramId,
   })
-  console.log(event)
   if (!event) {
     const error = new Error('No se encontro un evento con el ID')
     error.status = 404
@@ -155,7 +153,26 @@ const removeChronogram = async (params) => {
   }
   return chronogram
 }
-
+const getAllInscriptions = async (_eventId, query) => {
+  const event = await eventsRepository.getById(_eventId)
+  if (!event) {
+    const error = new Error('No se encontro el evento')
+    error.status = 404
+    throw error
+  }
+  const inscriptions = await inscriptionsRepository.getAllInscriptionsPaginate(
+    {
+      _eventId,
+    },
+    { page: query.page, limit: query.limit }
+  )
+  if (!inscriptions) {
+    const error = new Error('No se encontraron inscripciones')
+    error.status = 404
+    throw error
+  }
+  return inscriptions
+}
 export default {
   getById,
   update,
@@ -166,4 +183,5 @@ export default {
   createChronogram,
   updateChronogram,
   removeChronogram,
+  getAllInscriptions,
 }
