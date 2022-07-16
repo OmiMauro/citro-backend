@@ -51,16 +51,16 @@ const usersSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Token',
     },
-    _carId: {
+    /* _carId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Cars',
     },
-    _inscriptionId: [
+      _inscriptionId: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Inscriptions',
       },
-    ],
+    ], */
   },
   {
     timestamps: true,
