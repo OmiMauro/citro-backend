@@ -62,19 +62,13 @@ const create = async (user, _eventId, body) => {
   return inscription
 }
 
-const getAll = async (_eventId, query) => {
-  const event = await eventsRespository.getById(_eventId)
-  if (!event) {
-    const error = new Error('No se encontró el evento')
-    error.status = 404
-    throw error
-  }
-  const inscriptions = await inscriptionsRepository.getAll(event._id, {
-    page: query.page,
-    limit: query.limit,
+const getAll = async (authUser, query) => {
+  const inscriptions = await inscriptionsRepository.getAll({
+    _userId: authUser._id,
   })
+
   if (!inscriptions) {
-    const error = new Error('No se encontraron inscripciones para el evento')
+    const error = new Error('No se encontraron inscripciones')
     error.status = 400
     throw error
   }

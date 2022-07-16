@@ -36,10 +36,7 @@ const update = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const inscriptions = await inscriptionsService.getAll(
-      req.params.eventId,
-      req.query
-    )
+    const inscriptions = await inscriptionsService.getAll(req.authUser)
     res.status(201).json({ data: inscriptions })
   } catch (error) {
     res
@@ -47,7 +44,6 @@ const getAll = async (req, res) => {
       .json({ errors: [{ msg: error.message }], data: false })
   }
 }
-
 const getById = async (req, res) => {
   try {
     const inscription = await inscriptionsService.getById(req.params.id)

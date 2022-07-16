@@ -9,13 +9,7 @@ import {
 } from '../middlewares/inscriptions-validation.js'
 const router = Express.Router()
 
-router.get(
-  '/:eventId/event',
-  isAuth,
-  isAdmin,
-  getAllValidation,
-  inscriptionsControllers.getAll
-)
+router.get('/', isAuth, inscriptionsControllers.getAll)
 router.post(
   '/:eventId',
   isAuth,
