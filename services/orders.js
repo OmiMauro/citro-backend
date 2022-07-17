@@ -57,14 +57,14 @@ const create = async (user, inscriptionId) => {
 }
 
 const update = async (id) => {
-  const payment = await mercadopago.getPayment(id)
-  if (payment.statusText !== 'OK') {
+  const payment = await mercadoPago.getPayment(id)
+  if (payment.status !== 200) {
+    //I have launch error to sentry
     const error = new Error('No se encontro la orden con el ID')
     error.status = 404
     throw error
   }
-  const orderId = payment.data.external_reference
-
+  const orderId = payment.response.external_reference
   let order = await ordersRepository.getById(orderId)
   /*  if (!order) {
     const error = new Error('No se encontro la orden con el ID')
@@ -72,13 +72,13 @@ const update = async (id) => {
     throw error
   }
  */
-  order = await ordersRepository.update(orderId, payment.data)
+  order = await ordersRepository.update(orderId, payment.response)
   if (!order) {
     const error = new Error('No se pudo actualizar la orden')
     error.status = 400
     throw error
   }
-  return order
+  return true
 }
 
 const getById = async (id) => {

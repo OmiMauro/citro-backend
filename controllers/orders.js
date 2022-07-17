@@ -21,8 +21,8 @@ const webhook = async (req, res) => {
   try {
     if (req.query.type === 'payment') {
       res.status(200).end()
-      let id = req.query[data.id]
-      const order = await ordersServices.update(id, query)
+      let id = req.query['data.id']
+      const order = await ordersServices.update(id)
     }
   } catch (error) {
     return res.status(error.status).json({

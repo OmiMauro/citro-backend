@@ -4,6 +4,7 @@ const create = async (order) => {
   return await Orders.create(order)
 }
 const update = async (id, order) => {
+  order = { ...order, id_operacion: order.id }
   return await Orders.findByIdAndUpdate(id, order, { new: true }).lean()
 }
 const getById = async (id) => {
