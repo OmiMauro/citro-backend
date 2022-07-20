@@ -22,12 +22,12 @@ const inscriptionsSchema = new Schema(
     unitPrice: {
       type: Number,
     },
-    provinceOrigin: {
+    province: {
       type: String,
       trim: true,
       uppercase: true,
     },
-    locationOrigin: {
+    locality: {
       type: String,
       trim: true,
       uppercase: true,

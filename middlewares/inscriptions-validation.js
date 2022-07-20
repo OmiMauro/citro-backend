@@ -4,17 +4,17 @@ import { id } from './common-validation.js'
 
 const eventId = param('eventId', 'Ingrese el ID del evento').isMongoId()
 
-const provinceOrigin = check('provinceOrigin')
+const province = check('province')
   .exists()
   .withMessage('Ingrese la provincia de origen')
   .isString()
-const locationOrigin = check('locationOrigin')
+const locality = check('locality')
   .exists()
   .withMessage('Ingrese la localidad de origen')
   .isString()
 
-const createValidation = [provinceOrigin, locationOrigin, executeValidation]
-const updateValidation = [id, provinceOrigin, locationOrigin, executeValidation]
+const createValidation = [province, locality, executeValidation]
+const updateValidation = [id, province, locality, executeValidation]
 
 const getAllValidation = [eventId, executeValidation]
 const idValidation = [id, executeValidation]
