@@ -1,8 +1,8 @@
 # Citroneros Misiones
 
-- [Documentacion in Postman](https://documenter.getpostman.com/view/12682963/UyrEhaiU#e1c6847f-587a-459c-833b-56da5cbcd85b)
+- [Documentation in Postman](https://documenter.getpostman.com/view/12682963/UyrEhaiU#e1c6847f-587a-459c-833b-56da5cbcd85b)
 
-- [URL API](https://citro-backend.herokuapp.com/api/v2)
+- [URL API](http://citroneros-backend.herokuapp.com/)
 
 ## Routes
 
@@ -12,12 +12,7 @@
 - /galery
 - /auth/register
 - /auth/login
-- and more...
+- /events
 
-## Features
 
-Dashboard for roles admin and customer
 
-## Images
-
-The images have been persisten into Cloudinary Storage.
