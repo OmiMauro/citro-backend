@@ -4,6 +4,7 @@ const getById = async (id) => {
   return await Inscriptions.findById(id)
     .populate('_orderId')
     .populate('_eventId')
+    .populate('_userId', 'name lastname DNI phone')
     .lean()
 }
 const update = async (id, inscription) => {
