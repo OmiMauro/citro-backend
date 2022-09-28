@@ -5,11 +5,16 @@ import ordersRepository from '../repositories/orders.js'
 import mercadopago from '../modules/mercadopago.js'
 import ordersServices from './orders.js'
 
-const getById = async (id) => {
-  const inscription = await inscriptionsRepository.getById(id)
+const getById = async (_inscriptionId, user) => {
+  const inscription = await inscriptionsRepository.getById(_inscriptionId)
   if (!inscription) {
     const error = new Error('No se encontró la inscripción')
     error.status = 404
+    throw error
+  }
+  if (inscription?._userId.toString() !== user.toString()) {
+    const error = new Error('La inscripcion no existe')
+    error.status = 403
     throw error
   }
   return inscription
@@ -48,18 +53,17 @@ const create = async (user, _eventId, body) => {
     throw error
   }
   body = { ...body, _userId: user._id, _eventId, unitPrice: event.price }
-  inscription = await inscriptionsRepository.create(body)
   if (!inscription) {
     const error = new Error('Ocurrió un error al inscribirse')
     error.status = 400
     throw error
   }
-  /*  const order = await ordersServices.create(user, newInscription._id) 
+  const order = await ordersServices.create(user, inscription._id)
   inscription = await inscriptionsRepository.update(inscription._id, {
     _orderId: order._id,
   })
-  */
-  return inscription
+
+  return { inscription, order }
 }
 
 const getAll = async (authUser, query) => {
