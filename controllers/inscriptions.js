@@ -2,14 +2,15 @@ import inscriptionsService from '../services/inscriptions.js'
 
 const create = async (req, res) => {
   try {
-    const inscription = await inscriptionsService.create(
+    const { inscription, order } = await inscriptionsService.create(
       req.authUser,
       req.params.eventId,
       req.body
     )
+    inscription.init_point = order.init_point
     return res.status(201).json({
       msg: 'Se agrego exitosamente la inscripción',
-      data: inscription,
+      data: { inscription },
     })
   } catch (error) {
     res
@@ -46,7 +47,11 @@ const getAll = async (req, res) => {
 }
 const getById = async (req, res) => {
   try {
-    const inscription = await inscriptionsService.getById(req.params.id)
+    const inscription = await inscriptionsService.getById(
+      req.params.id,
+      req.authUser._id
+    )
+
     res.status(201).json({ data: inscription })
   } catch (error) {
     res
