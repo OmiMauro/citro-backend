@@ -1,5 +1,4 @@
 import inscriptionsService from '../services/inscriptions.js'
-
 const create = async (req, res) => {
   try {
     const { inscription, order } = await inscriptionsService.create(
@@ -49,7 +48,7 @@ const getById = async (req, res) => {
   try {
     const inscription = await inscriptionsService.getById(
       req.params.id,
-      req.authUser._id
+      req.authUser
     )
 
     res.status(201).json({ data: inscription })
