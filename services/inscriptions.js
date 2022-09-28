@@ -4,6 +4,7 @@ import paysRepository from '../repositories/pays.js'
 import ordersRepository from '../repositories/orders.js'
 import mercadopago from '../modules/mercadopago.js'
 import ordersServices from './orders.js'
+import config from '../config/config.js'
 
 const getById = async (_inscriptionId, user) => {
   const inscription = await inscriptionsRepository.getById(_inscriptionId)
@@ -12,8 +13,9 @@ const getById = async (_inscriptionId, user) => {
     error.status = 404
     throw error
   }
-  if (inscription?._userId.toString() !== user.toString()) {
-    const error = new Error('La inscripcion no existe')
+  if (user.roleId === config.adminId) return inscription
+  if (inscription?._userId.toString() !== user._id.toString()) {
+    const error = new Error('No tiene acceso a la inscripcion')
     error.status = 403
     throw error
   }
