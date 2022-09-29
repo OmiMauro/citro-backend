@@ -11,7 +11,7 @@ const router = Express.Router()
 
 router.get('/', isAuth, inscriptionsControllers.getAll)
 router.post(
-  '/:eventId',
+  '/:eventId/event',
   isAuth,
   createValidation,
   inscriptionsControllers.create
