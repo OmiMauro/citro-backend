@@ -55,6 +55,7 @@ const create = async (user, _eventId, body) => {
     throw error
   }
   body = { ...body, _userId: user._id, _eventId, unitPrice: event.price }
+  inscription = await inscriptionsRepository.create(body)
   if (!inscription) {
     const error = new Error('Ocurrió un error al inscribirse')
     error.status = 400
