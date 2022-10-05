@@ -10,11 +10,6 @@ const create = async (user, inscriptionId) => {
     throw error
   }
   let order = await ordersRepository.create()
-  if (!order) {
-    const error = new Error('No se pudo agregar la orden.')
-    error.status = 400
-    throw error
-  }
   let preference = {
     external_reference: order._id.toString(),
     statement_descriptor: `Inscripción DNI: ${user.DNI}`,
@@ -27,20 +22,12 @@ const create = async (user, inscriptionId) => {
         description: `Inscripción DNI: ${user.DNI}`,
       },
     ],
-    /* payer: {
-      name: user.name,
-      surname: user.lastname,
-      email: user.email,
-      identification: {
-        type: 'DNI',
-        number: user.DNI,
-      },
-    }, */
+
     expires: true,
   }
   const orderMercadoPago = await mercadoPago.createPreference(preference)
   if (!orderMercadoPago) {
-    const error = new Error('No se pudo crear la orden de pago de MP')
+    const error = new Error('No se pudo crear la preferencia de pago de MP')
     error.status = 400
     throw error
   }
@@ -50,9 +37,6 @@ const create = async (user, inscriptionId) => {
     error.status = 400
     throw error
   }
-  inscription = await inscriptionsRepository.update(inscription._id, {
-    _orderId: order._id,
-  })
   return order
 }
 
@@ -64,18 +48,11 @@ const update = async (id) => {
     error.status = 404
     throw error
   }
-  const orderId = payment.response.external_reference
-  let order = await ordersRepository.getById(orderId)
-  /*  if (!order) {
-    const error = new Error('No se encontro la orden con el ID')
-    error.status = 404
-    throw error
-  }
- */
-  order = await ordersRepository.update(orderId, payment.response)
+  const _orderId = payment.response.external_reference
+  const order = await ordersRepository.update(orderId, payment.response)
   if (!order) {
     const error = new Error('No se pudo actualizar la orden')
-    error.status = 400
+    error.status = 500
     throw error
   }
   return true
