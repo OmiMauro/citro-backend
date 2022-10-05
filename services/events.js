@@ -3,6 +3,8 @@ import filesModule from '../modules/files.js'
 import eventsRepository from '../repositories/events.js'
 import imagesRepository from '../repositories/images.js'
 import inscriptionsRepository from '../repositories/inscriptions.js'
+import { createDocument } from '../modules/pdf.js'
+
 const getById = async (id) => {
   const event = await eventsRepository.getById(id)
   if (!event) {
@@ -173,6 +175,61 @@ const getAllInscriptions = async (_eventId, query) => {
   }
   return inscriptions
 }
+const getAllInscriptionsPDF = async (_eventId) => {
+  const event = await eventsRepository.getById(_eventId)
+  if (!event) {
+    const error = new Error('No se encontro el evento')
+    error.status = 404
+    throw error
+  }
+  const inscriptions = await inscriptionsRepository.getAllInscriptionsByEvent({
+    _eventId,
+  })
+  if (!inscriptions) {
+    const error = new Error('No se encontraron inscripciones')
+    error.status = 404
+    throw error
+  }
+  const table = {
+    title: event?.name || 'Inscripciones',
+
+    headers: [
+      { label: 'Nombre', property: 'name', width: 60, renderer: null },
+      { label: 'Apellido', property: 'lastname', width: 60, renderer: null },
+      { label: 'DNI', property: 'DNI', width: 60, renderer: null },
+      { label: 'Estado', property: 'status', width: 60, renderer: null },
+      {
+        label: 'Detalle',
+        property: 'status_detail',
+        width: 60,
+        renderer: null,
+      },
+      {
+        label: 'Neto Recibido',
+        property: 'net_received_amount',
+        width: 50,
+        renderer: null,
+      },
+    ],
+    datas: inscriptions.map((item) => {
+      return {
+        name: item?._userId?.name,
+        lastname: item?._userId?.lastname,
+        DNI: item?._userId?.DNI,
+        status: item?._orderId?.status || 'Pendiente',
+        status_detail: item?._orderId?.status_detail,
+        net_received_amount: item?._orderId?.net_received_amount || 0,
+      }
+    }),
+  }
+  const document = await createDocument(table)
+  if (!document) {
+    const error = new Error('No se pudo crear el documento')
+    error.status = 400
+    throw error
+  }
+  return document
+}
 export default {
   getById,
   update,
@@ -183,5 +240,5 @@ export default {
   createChronogram,
   updateChronogram,
   removeChronogram,
-  getAllInscriptions,
+  getAllInscriptionsPDF,
 }
