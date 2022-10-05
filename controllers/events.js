@@ -128,6 +128,17 @@ const removeChronogram = async (req, res) => {
       .json({ errors: [{ msg: error.message }], data: false })
   }
 }
+const getAllInscriptionsPDF = async (req, res) => {
+  try {
+    const document = await eventsServices.getAllInscriptionsPDF(req.params.id)
+    document.pipe(res)
+    document.end()
+  } catch (error) {
+    return res
+      .status(error.status)
+      .json({ errors: [{ msg: error.message }], data: false })
+  }
+}
 export default {
   create,
   update,
@@ -139,4 +150,5 @@ export default {
   updateChronogram,
   removeChronogram,
   getAllInscriptions,
+  getAllInscriptionsPDF,
 }
