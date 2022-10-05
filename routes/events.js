@@ -59,5 +59,12 @@ router.get(
   idValidation,
   eventsController.getAllInscriptions
 )
+router.get(
+  '/:id/inscriptions/create-pdf',
+  /*   isAuth,
+  isAdmin, */
+  idValidation,
+  eventsController.getAllInscriptionsPDF
+)
 
 export default router
