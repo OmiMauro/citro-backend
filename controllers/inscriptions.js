@@ -6,10 +6,9 @@ const create = async (req, res) => {
       req.params.eventId,
       req.body
     )
-    inscription.init_point = order.init_point
     return res.status(201).json({
-      msg: 'Se agrego exitosamente la inscripción',
-      data: { inscription },
+      msg: 'Se agregó exitosamente la inscripción',
+      data: { ...inscription, init_point: order.init_point },
     })
   } catch (error) {
     res
