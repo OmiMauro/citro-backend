@@ -35,6 +35,12 @@ const getAllInscriptionsPaginate = async (search, { page, limit }) => {
     lean: true,
   })
 }
+const getAllInscriptionsByEvent = async ({ _eventId }) => {
+  return await Inscriptions.find({ _eventId })
+    .populate('_userId', 'name lastname DNI')
+    .populate('_orderId') /* status status_detail net_received_amount */
+    .lean()
+}
 export default {
   getById,
   update,
@@ -42,4 +48,5 @@ export default {
   getAll,
   existsInscription,
   getAllInscriptionsPaginate,
+  getAllInscriptionsByEvent,
 }
