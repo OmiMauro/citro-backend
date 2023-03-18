@@ -241,4 +241,5 @@ export default {
   updateChronogram,
   removeChronogram,
   getAllInscriptionsPDF,
+  getAllInscriptions,
 }
